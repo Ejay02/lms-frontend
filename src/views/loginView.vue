@@ -5,6 +5,7 @@ import { useRouter } from "vue-router";
 import FormInput from "../components/ui/FormInput.vue";
 import Alert from "../components/ui/Alert.vue";
 import LoadingSpinner from "../components/ui/loadingSpinner.vue";
+// import { EyeIcon, EyeOffIcon } from "@heroicons/vue/solid";
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -17,6 +18,7 @@ const form = ref({
 const errors = ref({});
 const loading = ref(false);
 const errorMessage = ref("");
+const showPassword = ref(false);
 
 const validate = () => {
   errors.value = {};
@@ -52,8 +54,8 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="max-w-md mx-auto">
-    <h1 class="text-2xl font-bold mb-6">Login</h1>
+  <div class="max-w-md mx-auto cursor-pointer">
+    <h1 class="text-2xl font-bold mb-6 text-center">Login</h1>
 
     <Alert v-if="errorMessage" type="error" :message="errorMessage" />
 
@@ -62,19 +64,33 @@ const handleSubmit = async () => {
         v-model="form.email"
         label="Email"
         type="email"
+        placeholder="Enter your email"
         :error="errors.email"
       />
 
-      <FormInput
-        v-model="form.password"
-        label="Password"
-        type="password"
-        :error="errors.password"
-      />
+      <div class="relative">
+        <FormInput
+          v-model="form.password"
+          :type="showPassword ? 'text' : 'password'"
+          label="Password"
+          placeholder="Enter your password"
+          :error="errors.password"
+        />
+        <button
+          type="button"
+          class="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+          @click="showPassword = !showPassword"
+        >
+          <!-- <EyeIcon v-if="!showPassword" class="w-5 h-5" /> -->
+          <i class="fa-regular fa-eye" v-if="!showPassword"></i>
+          <i class="fa-regular fa-eye-slash" v-else></i>
+          <!-- <EyeOffIcon v-else class="w-5 h-5" /> -->
+        </button>
+      </div>
 
       <button
         type="submit"
-        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
+        class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 mt-4"
         :disabled="loading"
       >
         <LoadingSpinner v-if="loading" size="sm" class="mx-auto" />

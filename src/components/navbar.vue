@@ -12,13 +12,13 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <nav class="bg-white shadow">
+  <nav class="bg-gray-200 shadow">
     <div class="container mx-auto px-4">
       <div class="flex justify-between h-16">
         <div class="flex">
           <RouterLink
             to="/"
-            class="flex items-center text-gray-700 hover:text-gray-900"
+            class="flex items-center text-gray-700 hover:text-gray-900 font-bold"
           >
             LMS Platform
           </RouterLink>
