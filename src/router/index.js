@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import HomeView from "../views/homeView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -9,20 +9,24 @@ const router = createRouter({
       name: "home",
       component: HomeView,
       meta: { requiresAuth: true },
-      children: [
-        {
-          path: "/courses",
-          name: "courses",
-          component: () => import("../views/CoursesView.vue"),
-          meta: { requiresAuth: true },
-        },
-        {
-          path: "/courses/:id",
-          name: "course-details",
-          component: () => import("../views/CourseDetailsView.vue"),
-          meta: { requiresAuth: true },
-        },
-      ],
+    },
+    {
+      path: "/courses",
+      name: "courses",
+      component: () => import("../views/coursesView.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/my-courses",
+      name: "courses",
+      component: () => import("../views/myCourses.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/courses/:id",
+      name: "course-details",
+      component: () => import("../views/CourseDetailsView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/login",

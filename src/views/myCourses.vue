@@ -3,6 +3,7 @@ import { onMounted, ref, onUnmounted } from "vue";
 import { useCourseStore } from "../stores/course";
 import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
 import Alert from "../components/ui/Alert.vue";
+import EmptyState from "../components/ui/emptyState.vue";
 
 const courseStore = useCourseStore();
 const loading = ref(true);
@@ -58,6 +59,7 @@ onMounted(async () => {
   document.addEventListener("click", closeAllDropdowns);
   try {
     await courseStore.fetchCourses();
+    console.log(courseStore.courses);
   } catch (err) {
     error.value = "Failed to load courses";
   } finally {
@@ -81,19 +83,28 @@ const formatPrice = (price) => {
   }).format(price);
 };
 
+const goToCourses = () => {
+  router.push("/courses");
+};
+
 const DEFAULT_IMAGE =
   "https://images.unsplash.com/photo-1521714161819-15534968fc5f?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 </script>
 
 <template>
   <div class="p-6 max-w-7xl mx-auto bg-gray-50">
-    <h1 class="text-2xl font-bold mb-6">A broad selection of courses</h1>
-    <p class="text-lg mb-8">
-      Choose from over 1,000 online video courses with new additions published
-      every month
-    </p>
+    <h1 class="text-2xl font-bold mb-6 text-center">My Learning</h1>
 
     <Alert v-if="error" type="error" :message="error" />
+
+    <EmptyState
+      v-if="!loading && courseStore.courses.length === 0"
+      icon="fa-regular fa-calendar-check"
+      heading="Nothing here yet!"
+      description="Add Courses to get started"
+      buttonText="Browse Courses"
+      :buttonAction="goToCourses"
+    />
 
     <div v-if="loading" class="py-12 flex justify-center">
       <LoadingSpinner size="lg" />

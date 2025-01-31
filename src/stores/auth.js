@@ -20,7 +20,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const register = async (userData) => {
     try {
-      const response = await api.post("/api/auth/signup", {
+      const response = await api.post("/auth/signup", {
         name: userData.name,
         email: userData.email,
         password: userData.password,
@@ -49,7 +49,7 @@ export const useAuthStore = defineStore("auth", () => {
         throw new Error("Google token not found");
       }
 
-      const response = await api.post("/api/auth/google", {
+      const response = await api.post("/auth/google", {
         token: googleToken,
       });
 
