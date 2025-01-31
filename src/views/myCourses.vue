@@ -4,7 +4,9 @@ import { useCourseStore } from "../stores/course";
 import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
 import Alert from "../components/ui/Alert.vue";
 import EmptyState from "../components/ui/emptyState.vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const courseStore = useCourseStore();
 const loading = ref(true);
 const error = ref("");
@@ -84,7 +86,7 @@ const formatPrice = (price) => {
 };
 
 const goToCourses = () => {
-  router.push("/courses");
+  router.push("/");
 };
 
 const DEFAULT_IMAGE =

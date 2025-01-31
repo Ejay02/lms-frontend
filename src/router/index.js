@@ -10,12 +10,7 @@ const router = createRouter({
       component: HomeView,
       meta: { requiresAuth: true },
     },
-    {
-      path: "/courses",
-      name: "courses",
-      component: () => import("../views/coursesView.vue"),
-      meta: { requiresAuth: true },
-    },
+
     {
       path: "/my-courses",
       name: "courses",

@@ -87,7 +87,6 @@ export const useAuthStore = defineStore("auth", () => {
   const fetchUserDetails = async () => {
     try {
       const response = await api.get("/auth/user");
-      console.log("fetch response:", response);
 
       if (response.data.success) {
         user.value = response.data.data;
@@ -97,7 +96,11 @@ export const useAuthStore = defineStore("auth", () => {
         throw new Error(response.data.message);
       }
     } catch (error) {
-      console.error("Error fetching user details:", error);
+      console.error("Token expired, please login:", error);
+      if (error.response?.status === 401) {
+        logout();
+        router.push("/login");
+      }
       user.value = null;
       throw error;
     }
