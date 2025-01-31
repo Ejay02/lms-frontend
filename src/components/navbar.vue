@@ -34,6 +34,13 @@ const getInitials = (name) => {
         <div class="flex items-center">
           <template v-if="auth.token">
             <RouterLink
+              to="/"
+              class="text-gray-700 px-3 py-2 relative hover:text-gray-400 cursor-pointer transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-700 before:absolute before:bg-gray-400 before:origin-center before:h-[1px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:bg-gray-400 after:origin-center after:h-[1px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%]"
+              activeClass="text-indigo-600 font-semibold "
+            >
+              Teach on LMS
+            </RouterLink>
+            <RouterLink
               to="/my-courses"
               class="text-gray-700 px-3 py-2 relative hover:text-gray-400 cursor-pointer transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-700 before:absolute before:bg-gray-400 before:origin-center before:h-[1px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:bg-gray-400 after:origin-center after:h-[1px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%]"
               activeClass="text-indigo-600 font-semibold "
@@ -74,10 +81,10 @@ const getInitials = (name) => {
               <!-- dropdown -->
               <div
                 v-if="isDropdownOpen"
-                class="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg"
+                class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg"
               >
                 <div class="p-4 text-center">
-                  <div class="relative flex items-center mt-6">
+                  <div class="relative flex items-center">
                     <div class="flex-grow border-t border-indigo-100"></div>
                     <div class="mx-4 text-gray-500">
                       <img
@@ -103,10 +110,10 @@ const getInitials = (name) => {
                     {{ auth.user?.email }}
                   </div>
                 </div>
-                <hr />
+               <!-- edit -->
                 <RouterLink
                   to="/settings"
-                  class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  class="border-t border-gray-200 block px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
                   <i class="fa-solid fa-user-gear"></i>
                   <span> Edit profile </span>
@@ -115,7 +122,7 @@ const getInitials = (name) => {
                 <!-- logout -->
                 <button
                   @click="handleLogout"
-                  class="cursor-pointer flex items-center w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  class="cursor-pointer flex items-center w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 border-t border-gray-200 bg-indigo-100"
                 >
                   <i class="fa-solid fa-arrow-up-right-from-square mr-2"></i>
                   <span>Logout</span>

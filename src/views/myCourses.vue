@@ -5,12 +5,14 @@ import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
 import Alert from "../components/ui/Alert.vue";
 import EmptyState from "../components/ui/emptyState.vue";
 import { useRouter } from "vue-router";
+import StarRating from "../components/starRating.vue";
 
 const router = useRouter();
 const courseStore = useCourseStore();
 const loading = ref(true);
 const error = ref("");
 const activeDropdowns = ref({});
+const rating = ref(0);
 
 // Define dropdown items
 const dropdownItems = [
@@ -33,6 +35,14 @@ const dropdownItems = [
   {
     icon: "far fa-flag",
     label: "Report",
+    action: (courseId) => {
+      console.log("Reported:", courseId);
+      activeDropdownId.value = null;
+    },
+  },
+  {
+    icon: "far fa-message",
+    label: "Feedback",
     action: (courseId) => {
       console.log("Reported:", courseId);
       activeDropdownId.value = null;
@@ -94,7 +104,7 @@ const DEFAULT_IMAGE =
 </script>
 
 <template>
-  <div class="p-6 max-w-7xl mx-auto bg-gray-50">
+  <div class="p-6 max-w-7xl mx-auto bg-gray-200 rounded-md cursor-pointer">
     <h1 class="text-2xl font-bold mb-6 text-center">My Learning</h1>
 
     <Alert v-if="error" type="error" :message="error" />
@@ -189,25 +199,23 @@ const DEFAULT_IMAGE =
             </div>
           </div>
 
-          <p class="text-sm text-gray-500 mb-1">{{ course.instructor }}</p>
+          <div class="justify-between flex">
+            <p class="text-sm text-gray-500 mb-1 capitalize">
+              {{ course?.instructor?.name }}
+            </p>
 
-          <!-- Rating -->
-          <div class="flex items-center mb-1">
-            <span class="text-orange-400 font-bold mr-1">{{
-              course.rating || "4.5"
-            }}</span>
-            <div class="flex text-orange-400">
-              <template v-for="i in 5" :key="i">
-                <i class="fas fa-star text-sm"></i>
-              </template>
+            <!-- Rating -->
+
+            <div class="">
+              <div class="flex items-center mb-1">
+                <StarRating v-model="rating" />
+              </div>
+              <div class="text-xs text-gray-500 text-center">Rate course</div>
             </div>
-            <span class="text-gray-500 text-sm ml-1"
-              >({{ course.totalRatings || "2,451" }})</span
-            >
           </div>
 
           <!-- Course Meta -->
-          <div class="flex items-center text-xs text-gray-500 mb-2 space-x-4">
+          <!-- <div class="flex items-center text-xs text-gray-500 mb-2 space-x-4">
             <div class="flex items-center">
               <i class="far fa-clock mr-1"></i>
               <span>{{ course.duration || "6.5 hours" }}</span>
@@ -220,17 +228,17 @@ const DEFAULT_IMAGE =
               <i class="far fa-closed-captioning mr-1"></i>
               <span>{{ course.hasSubtitles ? "CC" : "" }}</span>
             </div>
-          </div>
+          </div> -->
 
           <!-- Price -->
-          <div class="flex items-center mt-2">
+          <!-- <div class="flex items-center mt-2">
             <span class="font-bold text-lg">{{
               formatPrice(course.price || 19.99)
             }}</span>
             <span class="ml-2 text-sm text-gray-500 line-through">{{
               formatPrice((course.price || 19.99) * 3)
             }}</span>
-          </div>
+          </div> -->
 
           <!-- Badges -->
           <div class="flex gap-2 mt-2">

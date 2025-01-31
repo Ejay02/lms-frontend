@@ -87,9 +87,9 @@ const DEFAULT_IMAGE =
 </script>
 
 <template>
-  <div class="p-6 max-w-7xl mx-auto bg-gray-50">
+  <div class="p-6 max-w-7xl mx-auto bg-gray-200 rounded-md cursor-pointer">
     <h1 class="text-2xl font-bold mb-6">A broad selection of courses</h1>
-    <p class="text-lg mb-8">
+    <p class="text-md mb-8 text-gray-500 border-b border-gray-200 pb-4">
       Choose from over 1,000 online video courses with new additions published
       every month
     </p>
@@ -100,7 +100,7 @@ const DEFAULT_IMAGE =
       v-if="!loading && courseStore.courses.length === 0"
       icon="fa-regular fa-calendar-check"
       heading="Nothing here yet!"
-      description="Come back later "
+      description="Try again later"
     />
 
     <div v-if="loading" class="py-12 flex justify-center">
@@ -184,9 +184,12 @@ const DEFAULT_IMAGE =
             </div>
           </div>
 
-          <p class="text-sm text-gray-500 mb-1">{{ course.instructor }}</p>
+          <p class="text-sm text-gray-500 mb-1 capitalize">
+            {{ course.instructor?.name }}
+          </p>
 
           <!-- Rating -->
+           
           <div class="flex items-center mb-1">
             <span class="text-orange-400 font-bold mr-1">{{
               course.rating || "4.5"
