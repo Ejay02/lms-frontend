@@ -70,7 +70,7 @@ const closeAllDropdowns = (event) => {
 onMounted(async () => {
   document.addEventListener("click", closeAllDropdowns);
   try {
-    await courseStore.fetchCourses();
+    await courseStore.fetchMyCourses();
     console.log(courseStore.courses);
   } catch (err) {
     error.value = "Failed to load courses";
@@ -123,7 +123,7 @@ const goToCourses = () => {
       >
         <div class="relative">
           <img
-            :src="course?.coverImage || DEFAULT_IMAGE"
+            :src="course?.coverImage"
             class="w-full aspect-video object-cover"
             alt="Course Image"
           />
@@ -218,13 +218,6 @@ const goToCourses = () => {
               New
             </div>
           </div>
-
-          <RouterLink
-            :to="`/courses/${course._id}`"
-            class="block w-full text-center bg-purple-600 text-white py-2 px-4 rounded mt-3 hover:bg-purple-700 transition"
-          >
-            Add to cart
-          </RouterLink>
         </div>
       </div>
     </div>

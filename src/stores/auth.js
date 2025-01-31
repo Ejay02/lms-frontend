@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import api from "../utils/axios";
+import { useNotificationStore } from "./notification";
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
   const token = ref(localStorage.getItem("token"));
+  const notificationStore = useNotificationStore();
 
   // Set up axios defaults when token changes
   const setAuthHeader = (token) => {
@@ -32,6 +34,11 @@ export const useAuthStore = defineStore("auth", () => {
 
       // Optionally fetch user details after registration
       await fetchUserDetails();
+
+      notificationStore.addNotification({
+        type: "success",
+        message: `Signup Successful!`,
+      });
 
       return response.data;
     } catch (error) {
@@ -61,7 +68,6 @@ export const useAuthStore = defineStore("auth", () => {
 
       router.push("/courses");
     } catch (error) {
-      console.error("Google registration failed:", error);
       errorMessage.value = "Google registration failed";
     }
   };
@@ -71,12 +77,14 @@ export const useAuthStore = defineStore("auth", () => {
     try {
       const response = await api.post("/auth/login", credentials);
 
-      console.log("log response:", response);
-
       token.value = response.data.token;
 
       localStorage.setItem("token", token.value);
       setAuthHeader(token.value);
+      notificationStore.addNotification({
+        type: "success",
+        message: `Login Successful!`,
+      });
 
       await fetchUserDetails();
     } catch (error) {
@@ -96,7 +104,11 @@ export const useAuthStore = defineStore("auth", () => {
         throw new Error(response.data.message);
       }
     } catch (error) {
-      console.error("Token expired, please login:", error);
+      notificationStore.addNotification({
+        type: "warning",
+        message: "Token expired, please login again",
+      });
+
       if (error.response?.status === 401) {
         logout();
         router.push("/login");
@@ -111,6 +123,10 @@ export const useAuthStore = defineStore("auth", () => {
     token.value = null;
     localStorage.removeItem("token");
     setAuthHeader(null);
+    notificationStore.addNotification({
+      type: "success",
+      message: `Logout Successful!`,
+    });
   };
 
   return {
