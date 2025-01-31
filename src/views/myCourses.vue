@@ -88,19 +88,9 @@ const getCourseProgress = (courseId) => {
   return courseStore.progress[courseId] || 0;
 };
 
-const formatPrice = (price) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(price);
-};
-
 const goToCourses = () => {
   router.push("/");
 };
-
-const DEFAULT_IMAGE =
-  "https://images.unsplash.com/photo-1521714161819-15534968fc5f?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 </script>
 
 <template>
@@ -131,21 +121,20 @@ const DEFAULT_IMAGE =
         :key="course._id"
         class="bg-white border border-gray-200 hover:shadow-lg transition-shadow duration-300 group relative"
       >
-        <!-- Course Image with Play Button Overlay -->
         <div class="relative">
           <img
-            :src="course?.image || DEFAULT_IMAGE"
+            :src="course?.coverImage || DEFAULT_IMAGE"
             class="w-full aspect-video object-cover"
             alt="Course Image"
           />
           <!-- Play Button Overlay -->
           <div
-            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center"
+            class="absolute inset-0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center"
           >
             <div
               class="w-16 h-16 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             >
-              <i class="fas fa-play text-gray-800 text-xl"></i>
+              <i class="fas fa-play text-gray-800 text-lg"></i>
             </div>
           </div>
           <!-- Progress Bar -->
@@ -213,32 +202,6 @@ const DEFAULT_IMAGE =
               <div class="text-xs text-gray-500 text-center">Rate course</div>
             </div>
           </div>
-
-          <!-- Course Meta -->
-          <!-- <div class="flex items-center text-xs text-gray-500 mb-2 space-x-4">
-            <div class="flex items-center">
-              <i class="far fa-clock mr-1"></i>
-              <span>{{ course.duration || "6.5 hours" }}</span>
-            </div>
-            <div class="flex items-center">
-              <i class="fas fa-user-friends mr-1"></i>
-              <span>{{ course.enrollments || "1,245 students" }}</span>
-            </div>
-            <div class="flex items-center">
-              <i class="far fa-closed-captioning mr-1"></i>
-              <span>{{ course.hasSubtitles ? "CC" : "" }}</span>
-            </div>
-          </div> -->
-
-          <!-- Price -->
-          <!-- <div class="flex items-center mt-2">
-            <span class="font-bold text-lg">{{
-              formatPrice(course.price || 19.99)
-            }}</span>
-            <span class="ml-2 text-sm text-gray-500 line-through">{{
-              formatPrice((course.price || 19.99) * 3)
-            }}</span>
-          </div> -->
 
           <!-- Badges -->
           <div class="flex gap-2 mt-2">

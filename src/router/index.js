@@ -11,7 +11,6 @@ const router = createRouter({
       component: HomeView,
       meta: { requiresAuth: true },
     },
-
     {
       path: "/my-courses",
       name: "courses",
@@ -38,6 +37,7 @@ const router = createRouter({
       path: "/:catchAll(.*)",
       name: "not-found",
       component: () => import("../components/ui/notFound.vue"),
+      
     },
   ],
 });
