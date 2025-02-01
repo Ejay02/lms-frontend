@@ -1,6 +1,8 @@
 <template>
   <div class="max-w-md mx-auto">
-    <h1 class="text-2xl font-bold mb-6 text-center">Register</h1>
+    <h1 class="text-2xl font-bold mb-6 text-center">
+      {{ isInstructor ? "Instructor Registration" : "Register" }}
+    </h1>
 
     <Alert v-if="errorMessage" type="error" :message="errorMessage" />
 
@@ -89,15 +91,23 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useAuthStore } from "../stores/auth";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import FormInput from "../components/ui/FormInput.vue";
 import Alert from "../components/ui/Alert.vue";
 import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
 
 const auth = useAuthStore();
 const router = useRouter();
+const route = useRoute();
+
+const isInstructor = ref(false);
+console.log("isInstructor:", isInstructor);
+
+onMounted(() => {
+  isInstructor.value = route.query.role === "instructor";
+});
 
 const form = ref({
   name: "",
@@ -144,9 +154,14 @@ const handleSubmit = async () => {
   errorMessage.value = "";
 
   try {
-    await auth.register(form.value);
+    if (isInstructor.value) {
+      await auth.registerInstructor(form.value);
+    } else {
+      await auth.register(form.value);
+    }
     await router.push({ path: "/", replace: true });
   } catch (error) {
+    console.log('error:', error)
     errorMessage.value = error.response?.data?.message || "Registration failed";
   } finally {
     loading.value = false;
@@ -155,7 +170,10 @@ const handleSubmit = async () => {
 
 const callback = async (response) => {
   try {
-    await auth.googleAuth({ code: response.code });
+    await auth.googleAuth({
+      code: response.code,
+      isInstructor: isInstructor.value,
+    });
     await router.push({ path: "/", replace: true });
   } catch (error) {}
 };

@@ -116,9 +116,9 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
-  const googleAuth = async (code) => {
+  const googleAuth = async (code, role) => {
     try {
-      const response = await api.post("/auth/google-login", { code });
+      const response = await api.post("/auth/google-login", { code, role });
 
       token.value = response.data.token;
 
@@ -129,6 +129,7 @@ export const useAuthStore = defineStore("auth", () => {
         name: response.data.name,
         email: response.data.email,
         profileImage: response.data.profileImage,
+        role: response?.data?.role,
       };
 
       // Fetch full user details from your backend
@@ -210,6 +211,7 @@ export const useAuthStore = defineStore("auth", () => {
     googleAuth,
     updateProfile,
     fetchUserDetails,
+    registerInstructor,
     registerWithGoogle,
   };
 });

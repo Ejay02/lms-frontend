@@ -49,13 +49,13 @@ onUnmounted(() => {
   <nav class="bg-gray-200 shadow">
     <div class="pl-4 mr-10">
       <div class="flex justify-between h-16 items-center">
-        <RouterLink to="/" class="text-gray-700 hover:text-gray-900 font-bold">
+        <routerLink to="/" class="text-gray-700 hover:text-gray-900 font-bold">
           LMS Platform
-        </RouterLink>
+        </routerLink>
         <div class="flex items-center">
           <template v-if="auth.token">
             <RouterLink
-              to="/login"
+              to="/register?role=instructor"
               class="text-gray-700 px-3 py-2 relative hover:text-gray-400 cursor-pointer transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-700 before:absolute before:bg-gray-400 before:origin-center before:h-[1px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:bg-gray-400 after:origin-center after:h-[1px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%]"
               activeClass="text-indigo-600 font-semibold "
             >
@@ -93,7 +93,7 @@ onUnmounted(() => {
                   <div class="text-sm font-semibold">
                     {{ auth.user?.name }}
                   </div>
-                  <div class="text-xs text-gray-500">
+                  <div class="text-xs text-gray-500 capitalize">
                     {{ auth.user?.role }}
                   </div>
                 </div>

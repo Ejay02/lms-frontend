@@ -32,18 +32,17 @@ const router = createRouter({
     {
       path: "/login",
       name: "login",
-      component: () => import("../views/LoginView.vue"),
+      component: () => import("../views/loginView.vue"),
     },
     {
       path: "/register",
       name: "register",
-      component: () => import("../views/RegisterView.vue"),
+      component: () => import("../views/registerView.vue"),
     },
     {
       path: "/:catchAll(.*)",
       name: "not-found",
       component: () => import("../components/ui/notFound.vue"),
-      
     },
   ],
 });
@@ -53,16 +52,25 @@ router.beforeEach((to, from, next) => {
   const auth = useAuthStore();
   const isAuthenticated = !!auth.token;
 
+  // If the user is not authenticated, allow navigation to login or register.
   if (!isAuthenticated && to.path !== "/login" && to.path !== "/register") {
-    next("/login");
-  } else if (
-    isAuthenticated &&
-    (to.path === "/login" || to.path === "/register")
-  ) {
-    next("/");
-  } else {
-    next();
+    return next("/login");
   }
+
+  // If the user is authenticated...
+  if (isAuthenticated && (to.path === "/login" || to.path === "/register")) {
+    // Check if there's a role flag present in the query (e.g., ?role=instructor)
+    if (to.query && to.query.role) {
+      // If the role flag is present, allow navigation to /login
+      return next();
+    } else {
+      // Otherwise, redirect to home.
+      return next("/");
+    }
+  }
+
+  // Otherwise, continue as normal.
+  next();
 });
 
 export default router;
