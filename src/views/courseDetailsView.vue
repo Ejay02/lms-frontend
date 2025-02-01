@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useCourseStore } from "../stores/course";
@@ -47,11 +47,10 @@ onMounted(async () => {
         >
           <h3 class="text-lg font-semibold mb-2">{{ content.title }}</h3>
           <p class="text-gray-600">{{ content.description }}</p>
-          <!-- Add content-specific UI based on content.type -->
         </div>
       </div>
     </div>
 
     <div v-else class="text-center py-12 text-gray-600">Course not found</div>
   </div>
-</template>
+</template> -->

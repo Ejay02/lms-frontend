@@ -6,17 +6,17 @@
       class="cursor-pointer"
       @mouseover="setHover(star.id)"
       @mouseleave="clearHover"
-      @click="setRating(star.id)"
+      @click="updateRating(star.id)"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-4 w-4"
-        :fill="star.id <= (hoverRating || rating) ? 'yellow' : 'gray'"
+        :fill="star.id <= (hoverRating || internalRating) ? 'yellow' : 'gray'"
         viewBox="0 0 20 20"
         fill="currentColor"
         :class="{
-          'fill-yellow-400': star.id <= (hoverRating || rating),
-          'fill-gray-300': star.id > (hoverRating || rating),
+          'fill-yellow-400': star.id <= (hoverRating || internalRating),
+          'fill-gray-300': star.id > (hoverRating || internalRating),
         }"
       >
         <path
@@ -24,25 +24,44 @@
         />
       </svg>
     </div>
-    <!-- <p class="ml-3 text-sm text-gray-500">{{ rating }} / 5</p> -->
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch, defineProps, defineEmits } from "vue";
+
+const props = defineProps({
+  rating: {
+    type: Number,
+    default: 0,
+  },
+});
+
+const emit = defineEmits(["update:rating"]);
 
 const maxStars = 5;
 
-const rating = ref(0);
-
 const hoverRating = ref(null);
+
+// Use a local ref for the rating which syncs with the prop
+const internalRating = ref(props.rating);
+
+// Watch for changes from the parent to update the internal rating
+watch(
+  () => props.rating,
+  (newVal) => {
+    internalRating.value = newVal;
+  }
+);
 
 const stars = Array.from({ length: maxStars }, (_, index) => ({
   id: index + 1,
 }));
 
-const setRating = (id) => {
-  rating.value = id;
+const updateRating = (id) => {
+  internalRating.value = id;
+  // Emit the update event to sync with the parent component
+  emit("update:rating", id);
 };
 
 const setHover = (id) => {

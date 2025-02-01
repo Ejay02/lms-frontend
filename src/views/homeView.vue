@@ -9,30 +9,18 @@ const courseStore = useCourseStore();
 
 const loading = ref(true);
 const error = ref("");
-const enrollingCourseId = ref(null);
 
 const handleEnroll = async (course) => {
-  if (
-    enrollingCourseId.value === course._id ||
-    courseStore.isEnrolled(course._id)
-  )
-    return;
-
-  enrollingCourseId.value = course._id;
-  error.value = "";
-
   try {
     await courseStore.enroll(course);
-  } catch (err) {
-    error.value = "Failed to enroll in the course. Please try again.";
-  } finally {
-    enrollingCourseId.value = null;
+  } catch (error) {
+    console.error("Error enrolling:", error);
   }
 };
 
 onMounted(async () => {
   try {
-    await courseStore.fetchCourses();
+    await courseStore?.fetchCourses();
   } catch (err) {
     error.value = "Failed to load courses";
   } finally {
@@ -46,11 +34,31 @@ const formatPrice = (price) => {
     currency: "NGN",
   }).format(price);
 };
+
+const isNew = (createdAt) => {
+  const now = new Date();
+  const createdDate = new Date(createdAt);
+  const timeDifference = now - createdDate; // in milliseconds
+  const hoursDifference = timeDifference / (1000 * 3600); // convert to hours
+  return hoursDifference < 24; // Check if it's within the last 24 hours
+};
 </script>
 
 <template>
   <div class="p-6 max-w-7xl mx-auto bg-gray-200 rounded-md cursor-pointer">
-    <h1 class="text-2xl font-bold mb-6">A broad selection of courses</h1>
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold">A broad selection of courses</h1>
+      <div class="flex items-center border rounded-md">
+        <i class="fa-solid fa-magnifying-glass px-4 text-gray-500"></i>
+        <input
+          v-model="courseStore.searchQuery"
+          type="text"
+          placeholder="Search courses..."
+          class="px-4 py-2 border-0 outline-none text-sm"
+        />
+      </div>
+    </div>
+
     <p class="text-md mb-8 text-gray-500 border-b border-gray-200 pb-4">
       Choose from over 1,000 online video courses with new additions published
       every month
@@ -150,8 +158,9 @@ const formatPrice = (price) => {
             >
               Bestseller
             </div>
+
             <div
-              v-if="course.isNew"
+              v-if="isNew(course.createdAt)"
               class="inline-block bg-purple-100 text-purple-800 text-xs font-medium px-2 py-0.5"
             >
               New
@@ -171,7 +180,8 @@ const formatPrice = (price) => {
             {{ courseStore.isEnrolled(course._id) ? "Enrolled" : "Enroll" }}
           </button>
 
-          <!-- Optional: Show a link to view course if enrolled -->
+          <!-- Show "View Course" link only if enrolled -->
+          <div class=""></div>
           <RouterLink
             v-if="courseStore.isEnrolled(course._id)"
             :to="{ name: 'course-content', params: { id: course._id } }"

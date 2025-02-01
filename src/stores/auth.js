@@ -73,7 +73,7 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const login = async (credentials) => {
-    console.log("credentials:", credentials);
+   
     try {
       const response = await api.post("/auth/login", credentials);
 

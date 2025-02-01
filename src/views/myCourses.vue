@@ -6,6 +6,7 @@ import Alert from "../components/ui/Alert.vue";
 import EmptyState from "../components/ui/emptyState.vue";
 import { useRouter } from "vue-router";
 import StarRating from "../components/starRating.vue";
+import FeedbackModal from "../components/modals/feedbackModal.vue";
 
 const router = useRouter();
 const courseStore = useCourseStore();
@@ -13,6 +14,9 @@ const loading = ref(true);
 const error = ref("");
 const activeDropdowns = ref({});
 const rating = ref(0);
+
+const showFeedbackModal = ref(false);
+const selectedCourseId = ref(null);
 
 // Define dropdown items
 const dropdownItems = [
@@ -44,8 +48,9 @@ const dropdownItems = [
     icon: "far fa-message",
     label: "Feedback",
     action: (courseId) => {
-      console.log("Reported:", courseId);
-      activeDropdownId.value = null;
+      selectedCourseId.value = courseId;
+      showFeedbackModal.value = true;
+      activeDropdowns.value = {};
     },
   },
 ];
@@ -71,7 +76,6 @@ onMounted(async () => {
   document.addEventListener("click", closeAllDropdowns);
   try {
     await courseStore.fetchMyCourses();
-    console.log(courseStore.courses);
   } catch (err) {
     error.value = "Failed to load courses";
   } finally {
@@ -91,11 +95,30 @@ const getCourseProgress = (courseId) => {
 const goToCourses = () => {
   router.push("/");
 };
+
+const handleUnenroll = async (course) => {
+  try {
+    await courseStore.unenroll(course);
+  } catch (error) {
+    console.error("Error enrolling:", error);
+  }
+};
 </script>
 
 <template>
   <div class="p-6 max-w-7xl mx-auto bg-gray-200 rounded-md cursor-pointer">
-    <h1 class="text-2xl font-bold mb-6 text-center">My Learning</h1>
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-center">My Learning</h1>
+      <div class="flex items-center border rounded-md">
+        <i class="fa-solid fa-magnifying-glass px-4 text-gray-500"></i>
+        <input
+          v-model="courseStore.searchQueryMyCourses"
+          type="text"
+          placeholder="Search my courses..."
+          class="px-4 py-2 border-0 outline-none text-sm"
+        />
+      </div>
+    </div>
 
     <Alert v-if="error" type="error" :message="error" />
 
@@ -163,7 +186,7 @@ const goToCourses = () => {
             <div class="relative ml-2">
               <button
                 @click="(e) => toggleDropdown(course._id, e)"
-                class="p-1 hover:bg-gray-100 rounded dropdown-toggle"
+                class="p-1 hover:bg-gray-100 rounded"
               >
                 <i class="fas fa-ellipsis-v text-gray-500"></i>
               </button>
@@ -197,14 +220,14 @@ const goToCourses = () => {
 
             <div class="">
               <div class="flex items-center mb-1">
-                <StarRating v-model="rating" />
+                <StarRating v-model:rating="rating" />
               </div>
               <div class="text-xs text-gray-500 text-center">Rate course</div>
             </div>
           </div>
 
           <!-- Badges -->
-          <div class="flex gap-2 mt-2">
+          <!-- <div class="flex gap-2 mt-2">
             <div
               v-if="course.isBestseller"
               class="inline-block bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-0.5"
@@ -217,11 +240,24 @@ const goToCourses = () => {
             >
               New
             </div>
-          </div>
+          </div> -->
+          <button
+            @click="handleUnenroll(course)"
+            class="cursor-pointer block w-full text-center py-2 px-4 rounded mt-3 transition bg-purple-600 text-white hover:bg-purple-700"
+          >
+            {{ loading ? "Removing" : "Remove" }}
+          </button>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Feedback Modal -->
+  <FeedbackModal
+    :isOpen="showFeedbackModal"
+    :courseId="selectedCourseId"
+    @close="showFeedbackModal = false"
+  />
 </template>
 
 <style scoped>
