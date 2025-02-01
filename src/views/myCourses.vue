@@ -7,9 +7,11 @@ import EmptyState from "../components/ui/emptyState.vue";
 import { useRouter } from "vue-router";
 import StarRating from "../components/starRating.vue";
 import FeedbackModal from "../components/modals/feedbackModal.vue";
+import { useNotificationStore } from "../stores/notification";
 
 const router = useRouter();
 const courseStore = useCourseStore();
+const notificationStore = useNotificationStore();
 const loading = ref(true);
 const error = ref("");
 const activeDropdowns = ref({});
@@ -23,25 +25,31 @@ const dropdownItems = [
   {
     icon: "far fa-heart",
     label: "Add to Wishlist",
-    action: (courseId) => {
-      console.log("Added to wishlist:", courseId);
-      activeDropdownId.value = null;
+    action: () => {
+      notificationStore.addNotification({
+        type: "info",
+        message: `Demo: Added to wishlist !`,
+      });
     },
   },
   {
     icon: "far fa-share-square",
     label: "Share",
-    action: (courseId) => {
-      console.log("Shared:", courseId);
-      activeDropdownId.value = null;
+    action: () => {
+      notificationStore.addNotification({
+        type: "warning",
+        message: `Demo: Shared!`,
+      });
     },
   },
   {
     icon: "far fa-flag",
     label: "Report",
-    action: (courseId) => {
-      console.log("Reported:", courseId);
-      activeDropdownId.value = null;
+    action: () => {
+      notificationStore.addNotification({
+        type: "warning",
+        message: `Demo: Reported!`,
+      });
     },
   },
   {
@@ -186,14 +194,14 @@ const handleUnenroll = async (course) => {
             <div class="relative ml-2">
               <button
                 @click="(e) => toggleDropdown(course._id, e)"
-                class="p-1 hover:bg-gray-100 rounded"
+                class="p-1 hover:bg-gray-100 rounded cursor-pointer"
               >
                 <i class="fas fa-ellipsis-v text-gray-500"></i>
               </button>
               <!-- Dropdown Content -->
               <div
                 v-if="activeDropdowns[course._id]"
-                class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 border border-gray-200 dropdown-menu"
+                class="cursor-pointer absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 border border-gray-200 dropdown-menu"
                 @click.stop
               >
                 <div class="py-1">
@@ -201,7 +209,7 @@ const handleUnenroll = async (course) => {
                     v-for="(item, index) in dropdownItems"
                     :key="index"
                     @click="item.action(course._id)"
-                    class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                    class="cursor-pointer w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                   >
                     <i :class="item.icon" class="mr-2"></i>
                     {{ item.label }}
