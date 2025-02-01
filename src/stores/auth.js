@@ -2,11 +2,13 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import api from "../utils/axios";
 import { useNotificationStore } from "./notification";
+import { useRouter } from "vue-router";
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
   const token = ref(localStorage.getItem("token"));
   const notificationStore = useNotificationStore();
+  const router = useRouter();
 
   // Set up axios defaults when token changes
   const setAuthHeader = (token) => {
@@ -17,7 +19,6 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
-  // Initialize auth header from stored token
   setAuthHeader(token.value);
 
   const register = async (userData) => {
@@ -32,7 +33,31 @@ export const useAuthStore = defineStore("auth", () => {
       localStorage.setItem("token", token.value);
       setAuthHeader(token.value);
 
-      // Optionally fetch user details after registration
+      await fetchUserDetails();
+
+      notificationStore.addNotification({
+        type: "success",
+        message: `Signup Successful!`,
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const registerInstructor = async (userData) => {
+    try {
+      const response = await api.post("/auth/instructor-signup", {
+        name: userData.name,
+        email: userData.email,
+        password: userData.password,
+      });
+
+      token.value = response.data.token;
+      localStorage.setItem("token", token.value);
+      setAuthHeader(token.value);
+
       await fetchUserDetails();
 
       notificationStore.addNotification({
@@ -73,7 +98,6 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const login = async (credentials) => {
-   
     try {
       const response = await api.post("/auth/login", credentials);
 
@@ -92,6 +116,33 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const googleAuth = async (code) => {
+    try {
+      const response = await api.post("/auth/google-login", { code });
+
+      token.value = response.data.token;
+
+      localStorage.setItem("token", token.value);
+      setAuthHeader(token.value);
+
+      user.value = {
+        name: response.data.name,
+        email: response.data.email,
+        profileImage: response.data.profileImage,
+      };
+
+      // Fetch full user details from your backend
+      await fetchUserDetails();
+
+      notificationStore.addNotification({
+        type: "success",
+        message: `Google Login Successful!`,
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const fetchUserDetails = async () => {
     try {
       const response = await api.get("/auth/user");
@@ -104,12 +155,12 @@ export const useAuthStore = defineStore("auth", () => {
         throw new Error(response.data.message);
       }
     } catch (error) {
-      notificationStore.addNotification({
-        type: "warning",
-        message: "Token expired, please login again",
-      });
-
       if (error.response?.status === 401) {
+        notificationStore.addNotification({
+          type: "warning",
+          message: "Token expired, please login again",
+        });
+
         logout();
         router.push("/login");
       }
@@ -129,13 +180,36 @@ export const useAuthStore = defineStore("auth", () => {
     });
   };
 
+  const updateProfile = async (profileData) => {
+    try {
+      const response = await api.put("/auth/update-profile", profileData);
+
+      if (response.data.user) {
+        user.value = response.data.user;
+        notificationStore.addNotification({
+          type: "success",
+          message: "Profile updated successfully",
+        });
+      }
+      return response.data;
+    } catch (error) {
+      notificationStore.addNotification({
+        type: "error",
+        message: error.response?.data?.message || "Error updating profile",
+      });
+      throw error;
+    }
+  };
+
   return {
     user,
     token,
-    register,
-    registerWithGoogle,
     login,
     logout,
+    register,
+    googleAuth,
+    updateProfile,
     fetchUserDetails,
+    registerWithGoogle,
   };
 });

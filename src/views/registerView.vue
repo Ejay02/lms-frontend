@@ -70,13 +70,14 @@
       <div class="flex-grow border-t border-gray-300"></div>
     </div>
 
-    <button
-      @click="handleGoogleRegister"
-      class="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 cursor-pointer text-gray-700 py-2 rounded-md hover:bg-indigo-100 shadow-sm"
-    >
-      <img src="/google.svg" alt="Google" class="w-5 h-5" />
-      <span>Register with Google</span>
-    </button>
+    <GoogleLogin :callback="callback" class="w-full">
+      <button
+        class="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 cursor-pointer text-gray-700 py-2 rounded-md hover:bg-indigo-100 shadow-sm"
+      >
+        <img src="/google.svg" alt="Google" class="w-6 h-6" />
+        <span>Sign in with Google</span>
+      </button>
+    </GoogleLogin>
 
     <p class="mt-4 text-center text-gray-600 text-sm">
       Already have an account?
@@ -144,21 +145,18 @@ const handleSubmit = async () => {
 
   try {
     await auth.register(form.value);
-    router.push("/courses");
+    await router.push({ path: "/", replace: true });
   } catch (error) {
-    console.log("error:", error);
     errorMessage.value = error.response?.data?.message || "Registration failed";
   } finally {
     loading.value = false;
   }
 };
 
-const handleGoogleRegister = async () => {
+const callback = async (response) => {
   try {
-    await auth.registerWithGoogle();
-    router.push("/courses");
-  } catch (error) {
-    errorMessage.value = "Google registration failed";
-  }
+    await auth.googleAuth({ code: response.code });
+    await router.push({ path: "/", replace: true });
+  } catch (error) {}
 };
 </script>

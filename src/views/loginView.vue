@@ -46,14 +46,16 @@
       <span class="mx-4 text-gray-500">OR</span>
       <div class="flex-grow border-t border-gray-300"></div>
     </div>
+    <!--  -->
 
-    <button
-      @click="handleGoogleLogin"
-      class="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 cursor-pointer text-gray-700 py-2 rounded-md hover:bg-indigo-100 shadow-sm"
-    >
-      <img src="/google.svg" alt="Google" class="w-6 h-6" />
-      <span>Sign in with Google</span>
-    </button>
+    <GoogleLogin :callback="callback" class="w-full">
+      <button
+        class="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 cursor-pointer text-gray-700 py-2 rounded-md hover:bg-indigo-100 shadow-sm"
+      >
+        <img src="/google.svg" alt="Google" class="w-6 h-6" />
+        <span>Sign in with Google</span>
+      </button>
+    </GoogleLogin>
 
     <p class="mt-4 text-center text-gray-600 text-sm">
       Don't have an account?
@@ -111,19 +113,16 @@ const handleSubmit = async () => {
     await auth.login(form.value);
     await router.push({ path: "/", replace: true });
   } catch (error) {
-    console.log("error:", error);
     errorMessage.value = error.response?.data?.message || "Login failed";
   } finally {
     loading.value = false;
   }
 };
 
-const handleGoogleLogin = async () => {
+const callback = async (response) => {
   try {
-    await auth.loginWithGoogle();
-    router.push("/courses");
-  } catch (error) {
-    errorMessage.value = "Google login failed";
-  }
+    await auth.googleAuth({ code: response.code });
+    await router.push({ path: "/", replace: true });
+  } catch (error) {}
 };
 </script>
