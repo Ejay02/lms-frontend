@@ -7,6 +7,7 @@ import EmptyState from "../components/ui/emptyState.vue";
 import { useAuthStore } from "../stores/auth";
 import { useRouter } from "vue-router";
 import { useInstructorCoursesStore } from "../stores/instructorCourse";
+import FeedbackViewModal from "../components/modals/feedbackViewModal.vue";
 
 const courseStore = useCourseStore();
 const instructorStore = useInstructorCoursesStore();
@@ -16,6 +17,9 @@ const router = useRouter();
 
 const loading = ref(true);
 const error = ref("");
+
+const showFeedback = ref(false);
+const selectedCourse = ref(null);
 
 const handleEnroll = async (course) => {
   try {
@@ -122,8 +126,14 @@ const goToCourses = () => {
 // ];
 
 const showFeedbackModal = (course) => {
-  currentFeedback.value = course.feedback;
+  selectedCourse.value = course;
   showFeedback.value = true;
+};
+
+// Close the feedback modal
+const closeFeedbackModal = () => {
+  showFeedback.value = false;
+  selectedCourse.value = null;
 };
 </script>
 
@@ -283,8 +293,8 @@ const showFeedbackModal = (course) => {
 
   <!-- teacher -->
 
-  <div class="bg-gray-200 rounded-md py-12 sm:py-16">
-    <div class="flex justify-between items-center mb-6 p-4">
+  <div v-else class="bg-gray-200 rounded-md py-12 sm:py-16">
+    <div class="flex justify-between items-center mb-4 px-6 lg:px-8">
       <h2
         class="text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl"
       >
@@ -327,12 +337,12 @@ const showFeedbackModal = (course) => {
 
       <div
         v-else
-        class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3"
+        class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:mt-6 sm:pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-3"
       >
-        <article
+        <section
           v-for="course in instructorStore?.courses"
           :key="course?._id"
-          class="flex max-w-xl flex-col items-start justify-between"
+          class="flex max-w-xl flex-col items-start justify-between border rounded border-gray-300 p-2"
         >
           <div class="w-full h-48 mb-4 overflow-hidden rounded-lg">
             <img
@@ -342,7 +352,7 @@ const showFeedbackModal = (course) => {
             />
           </div>
 
-          <div class="flex items-center gap-x-4 text-xs">
+          <div class="flex items-center gap-x-4 text-xs justify-between w-full">
             <time :datetime="course?.createdAt" class="text-gray-500">
               {{ new Date(course?.createdAt).toISOString().split("T")[0] }}
             </time>
@@ -351,22 +361,21 @@ const showFeedbackModal = (course) => {
               <i class="far fa-clock mr-1"></i>
               <span>6.5 hours</span>
             </div>
-            <a
-              class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
+
+            <span
+              class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset"
+              >Tech</span
             >
-              Tech
-            </a>
-            <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset">Tech</span>
           </div>
 
-          <div class="group relative border-b border-gray-300 p-2">
+          <div class="group relative p-2">
             <h3
               class="mt-3 text-lg/6 font-semibold text-gray-900 group-hover:text-gray-600"
             >
-              <a :href="course?.href">
+              <span>
                 <span class="absolute inset-0"></span>
                 {{ course?.title }}
-              </a>
+              </span>
             </h3>
             <p class="mt-5 line-clamp-3 text-sm/6 text-gray-600">
               {{ course?.description }}
@@ -375,7 +384,7 @@ const showFeedbackModal = (course) => {
 
           <div class="flex justify-between w-full">
             <div class="flex items-center mt-1 text-xs">
-              <span class="text-orange-400 font-bold mr-2">4.5</span>
+              <span class="text-orange-400 font-bold m-2">4.5</span>
               <div class="flex text-orange-400">
                 <i v-for="i in 5" :key="i" class="fas fa-star text-xs"></i>
               </div>
@@ -390,7 +399,7 @@ const showFeedbackModal = (course) => {
             </div>
           </div>
 
-          <div class="mt-2 flex items-center gap-x-6 justify-start w-full">
+          <div class="mt-2 flex items-center gap-x-6 justify-end w-full">
             <button
               @click="showFeedbackModal(course)"
               class="hover:opacity-75 transition-opacity"
@@ -413,10 +422,15 @@ const showFeedbackModal = (course) => {
               ></i>
             </button>
           </div>
-        </article>
+        </section>
       </div>
     </div>
   </div>
+  <FeedbackViewModal
+    :show="showFeedback"
+    :course="selectedCourse"
+    @close="closeFeedbackModal"
+  />
 </template>
 
 <style scoped>

@@ -22,7 +22,7 @@ export const useInstructorCoursesStore = defineStore(
         const response = await api.get("/courses/instructor-courses", {
           params: { page, limit, search },
         });
-        console.log("response:", response);
+
         courses.value = response?.data?.data;
       } catch (err) {
         error.value =

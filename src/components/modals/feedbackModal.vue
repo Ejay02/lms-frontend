@@ -62,7 +62,7 @@ const submitFeedback = async () => {
     isSubmitting.value = true;
 
     const response = await api.post(
-      `/progress/${props.courseId}`,
+      `/feedback/${props.courseId}`,
       { rating: rating.value, comment: comment.value },
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
