@@ -24,6 +24,12 @@ const router = createRouter({
     //   meta: { requiresAuth: true },
     // },
     {
+      path: "/feedback",
+      name: "feedback-details",
+      component: () => import("../views/feedbackView.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/profile-setting",
       name: "course-details",
       component: () => import("../views/profileSettingsView.vue"),

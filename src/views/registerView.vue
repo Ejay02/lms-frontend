@@ -103,7 +103,6 @@ const router = useRouter();
 const route = useRoute();
 
 const isInstructor = ref(false);
-console.log("isInstructor:", isInstructor);
 
 onMounted(() => {
   isInstructor.value = route.query.role === "instructor";
@@ -161,7 +160,6 @@ const handleSubmit = async () => {
     }
     await router.push({ path: "/", replace: true });
   } catch (error) {
-    console.log('error:', error)
     errorMessage.value = error.response?.data?.message || "Registration failed";
   } finally {
     loading.value = false;

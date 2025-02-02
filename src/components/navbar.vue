@@ -4,11 +4,12 @@ import { useAuthStore } from "../stores/auth";
 import { useRouter } from "vue-router";
 
 const auth = useAuthStore();
+
 const router = useRouter();
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
 
-const user = auth.fetchUserDetails();
+// const user = auth.fetchUserDetails();
 
 const handleLogout = () => {
   auth.logout();
@@ -54,23 +55,45 @@ onUnmounted(() => {
         </routerLink>
         <div class="flex items-center">
           <template v-if="auth.token">
-            <RouterLink
-              to="/register?role=instructor"
-              class="text-gray-700 px-3 py-2 relative hover:text-gray-400 cursor-pointer transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-700 before:absolute before:bg-gray-400 before:origin-center before:h-[1px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:bg-gray-400 after:origin-center after:h-[1px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%]"
-              activeClass="text-indigo-600 font-semibold "
-            >
-              Teach on LMS
-            </RouterLink>
-            <RouterLink
-              to="/my-courses"
-              class="text-gray-700 px-3 py-2 relative hover:text-gray-400 cursor-pointer transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-700 before:absolute before:bg-gray-400 before:origin-center before:h-[1px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:bg-gray-400 after:origin-center after:h-[1px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%]"
-              activeClass="text-indigo-600 font-semibold "
-            >
-              My Courses
-            </RouterLink>
+            <div class="">
+              <div class="" v-if="auth?.user?.role === 'student'">
+                <RouterLink
+                  to="/register?role=instructor"
+                  class="text-gray-700 px-3 py-2 relative hover:text-gray-400 cursor-pointer transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-700 before:absolute before:bg-gray-400 before:origin-center before:h-[1px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:bg-gray-400 after:origin-center after:h-[1px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%]"
+                  activeClass="text-indigo-600 font-semibold "
+                >
+                  Teach on LMS
+                </RouterLink>
+
+                <RouterLink
+                  to="/my-courses"
+                  class="text-gray-700 px-3 py-2 relative hover:text-gray-400 cursor-pointer transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-700 before:absolute before:bg-gray-400 before:origin-center before:h-[1px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:bg-gray-400 after:origin-center after:h-[1px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%]"
+                  activeClass="text-indigo-600 font-semibold "
+                >
+                  My Courses
+                </RouterLink>
+              </div>
+              <div class="" v-else>
+                <RouterLink
+                  to="/login?role=student"
+                  class="text-gray-700 px-3 py-2 relative hover:text-gray-400 cursor-pointer transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-700 before:absolute before:bg-gray-400 before:origin-center before:h-[1px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:bg-gray-400 after:origin-center after:h-[1px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%]"
+                  activeClass="text-indigo-600 font-semibold "
+                >
+                  Student View
+                </RouterLink>
+                <RouterLink
+                  to="/feedback"
+                  class="text-gray-700 px-3 py-2 relative hover:text-gray-400 cursor-pointer transition-all ease-in-out before:transition-[width] before:ease-in-out before:duration-700 before:absolute before:bg-gray-400 before:origin-center before:h-[1px] before:w-0 hover:before:w-[50%] before:bottom-0 before:left-[50%] after:transition-[width] after:ease-in-out after:duration-700 after:absolute after:bg-gray-400 after:origin-center after:h-[1px] after:w-0 hover:after:w-[50%] after:bottom-0 after:right-[50%]"
+                  activeClass="text-indigo-600 font-semibold "
+                >
+                  Feedback
+                </RouterLink>
+              </div>
+            </div>
             <!-- User dropdown container -->
             <div ref="dropdownRef" class="relative ml-2">
               <!-- User Button -->
+
               <button
                 @click="toggleDropdown"
                 class="flex items-center space-x-2 text-gray-700 hover:text-gray-900 focus:outline-none cursor-pointer"

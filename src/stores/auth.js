@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import api from "../utils/axios";
 import { useNotificationStore } from "./notification";
 import { useRouter } from "vue-router";
@@ -19,7 +19,21 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  // Initialize auth header on store load
   setAuthHeader(token.value);
+
+  // Persist user data from localStorage if available
+  const loadUserFromLocalStorage = () => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      user.value = JSON.parse(storedUser);
+    }
+  };
+
+  // Call this when store is mounted to load data
+  onMounted(() => {
+    loadUserFromLocalStorage();
+  });
 
   const register = async (userData) => {
     try {
@@ -73,9 +87,8 @@ export const useAuthStore = defineStore("auth", () => {
 
   const registerWithGoogle = async () => {
     try {
-      // Assuming you're redirected back with the Google token in the URL
       const urlParams = new URLSearchParams(window.location.search);
-      const googleToken = urlParams.get("token"); // Make sure to include 'token' as query param
+      const googleToken = urlParams.get("token");
 
       if (!googleToken) {
         throw new Error("Google token not found");
@@ -102,7 +115,6 @@ export const useAuthStore = defineStore("auth", () => {
       const response = await api.post("/auth/login", credentials);
 
       token.value = response.data.token;
-
       localStorage.setItem("token", token.value);
       setAuthHeader(token.value);
       notificationStore.addNotification({
@@ -121,7 +133,6 @@ export const useAuthStore = defineStore("auth", () => {
       const response = await api.post("/auth/google-login", { code, role });
 
       token.value = response.data.token;
-
       localStorage.setItem("token", token.value);
       setAuthHeader(token.value);
 
@@ -132,7 +143,6 @@ export const useAuthStore = defineStore("auth", () => {
         role: response?.data?.role,
       };
 
-      // Fetch full user details from your backend
       await fetchUserDetails();
 
       notificationStore.addNotification({
@@ -150,6 +160,7 @@ export const useAuthStore = defineStore("auth", () => {
 
       if (response.data.success) {
         user.value = response.data.data;
+        localStorage.setItem("user", JSON.stringify(user.value)); // Persist user data
 
         return response.data.data;
       } else {
@@ -174,6 +185,7 @@ export const useAuthStore = defineStore("auth", () => {
     user.value = null;
     token.value = null;
     localStorage.removeItem("token");
+    localStorage.removeItem("user"); // Clear stored user data
     setAuthHeader(null);
     notificationStore.addNotification({
       type: "success",
@@ -187,6 +199,7 @@ export const useAuthStore = defineStore("auth", () => {
 
       if (response.data.user) {
         user.value = response.data.user;
+        localStorage.setItem("user", JSON.stringify(user.value)); // Persist updated user data
         notificationStore.addNotification({
           type: "success",
           message: "Profile updated successfully",
