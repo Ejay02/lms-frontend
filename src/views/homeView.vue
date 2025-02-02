@@ -6,8 +6,10 @@ import Alert from "../components/ui/Alert.vue";
 import EmptyState from "../components/ui/emptyState.vue";
 import { useAuthStore } from "../stores/auth";
 import { useRouter } from "vue-router";
+import { useInstructorCoursesStore } from "../stores/instructorCourse";
 
 const courseStore = useCourseStore();
+const instructorStore = useInstructorCoursesStore();
 const auth = useAuthStore();
 
 const router = useRouter();
@@ -26,6 +28,7 @@ const handleEnroll = async (course) => {
 onMounted(async () => {
   try {
     await courseStore?.fetchCourses();
+    await instructorStore?.fetchInstructorCourses();
   } catch (err) {
     error.value = "Failed to load courses";
   } finally {
@@ -52,76 +55,76 @@ const goToCourses = () => {
   router.push("/");
 };
 
-const posts = [
-  {
-    id: 1,
-    title: "Boost your conversion rate",
-    href: "#",
-    description:
-      "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
-    date: "Mar 16, 2020",
-    datetime: "2020-03-16",
-    category: { title: "Marketing", href: "#" },
-    author: {
-      name: "Michael Foster",
-      role: "Co-Founder / CTO",
-      href: "#",
-      imageUrl:
-        "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-  {
-    id: 2,
-    title: "Boost your conversion rate",
-    href: "#",
-    description:
-      "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
-    date: "Mar 16, 2020",
-    datetime: "2020-03-16",
-    category: { title: "Marketing", href: "#" },
-    author: {
-      name: "Michael Foster",
-      role: "Co-Founder / CTO",
-      href: "#",
-      imageUrl:
-        "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-  {
-    id: 3,
-    title: "Boost your conversion rate",
-    href: "#",
-    description:
-      "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
-    date: "Mar 16, 2020",
-    datetime: "2020-03-16",
-    category: { title: "Marketing", href: "#" },
-    author: {
-      name: "Michael Foster",
-      role: "Co-Founder / CTO",
-      href: "#",
-      imageUrl:
-        "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-  {
-    id: 4,
-    title: "Boost your conversion rate",
-    href: "#",
-    description:
-      "Illo sint voluptas. Error voluptates culpa eligendi. Hic vel totam vitae illo. Non aliquid explicabo necessitatibus unde. Sed exercitationem placeat consectetur nulla deserunt vel. Iusto corrupti dicta.",
-    date: "Mar 16, 2020",
-    datetime: "2020-03-16",
-    category: { title: "Marketing", href: "#" },
-    author: {
-      name: "Michael Foster",
-      role: "Co-Founder / CTO",
-      href: "#",
-      imageUrl:
-        "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  },
-];
+// const posts = [
+//   {
+//     _id: "1",
+//     title: "Vue.js for Beginners",
+//     description:
+//       "Learn the fundamentals of Vue.js 3 with Composition API and best practices for modern web development.",
+//     coverImage: "https://picsum.photos/seed/vue1/800/600",
+//     category: { title: "Marketing", href: "#" },
+//     date: "Mar 16, 2020",
+//     feedback: [
+//       {
+//         _id: "1",
+//         user: { name: "John Doe" },
+//         content: "Great course! Very well explained.",
+//         createdAt: "2024-02-01",
+//       },
+//       {
+//         _id: "2",
+//         user: { name: "Jane Smith" },
+//         content: "The exercises were very helpful.",
+//         createdAt: "2024-02-02",
+//       },
+//     ],
+//   },
+//   {
+//     _id: "2",
+//     title: "Advanced TypeScript",
+//     description:
+//       "Master TypeScript with advanced types, decorators, and real-world patterns for large applications.",
+//     coverImage: "https://picsum.photos/seed/ts1/800/600",
+//     category: { title: "Marketing", href: "#" },
+//     date: "Mar 16, 2020",
+//     feedback: [
+//       {
+//         _id: "3",
+//         user: { name: "Mike Johnson" },
+//         content: "Excellent deep dive into TypeScript.",
+//         createdAt: "2024-02-01",
+//       },
+//     ],
+//   },
+//   {
+//     _id: "3",
+//     title: "Full Stack Development",
+//     description:
+//       "Build complete web applications with Vue.js, Node.js, and MongoDB. Learn deployment and best practices.",
+//     coverImage: "https://picsum.photos/seed/fs1/800/600",
+//     category: { title: "Marketing", href: "#" },
+//     date: "Mar 16, 2020",
+//     feedback: [
+//       {
+//         _id: "4",
+//         user: { name: "Sarah Wilson" },
+//         content: "Very comprehensive course!",
+//         createdAt: "2024-01-30",
+//       },
+//       {
+//         _id: "5",
+//         user: { name: "Tom Brown" },
+//         content: "The project-based approach was perfect.",
+//         createdAt: "2024-01-31",
+//       },
+//     ],
+//   },
+// ];
+
+const showFeedbackModal = (course) => {
+  currentFeedback.value = course.feedback;
+  showFeedback.value = true;
+};
 </script>
 
 <template>
@@ -279,7 +282,8 @@ const posts = [
   </div>
 
   <!-- teacher -->
-  <div class="bg-gray-200 rounded-md py-12 sm:py-16" v-else>
+
+  <div class="bg-gray-200 rounded-md py-12 sm:py-16">
     <div class="flex justify-between items-center mb-6 p-4">
       <h2
         class="text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl"
@@ -290,14 +294,14 @@ const posts = [
       <div class="flex items-center border rounded-md">
         <i class="fa-solid fa-magnifying-glass px-4 text-gray-500"></i>
         <input
-          v-model="courseStore.searchQuery"
+          v-model="instructorStore.searchQuery"
           type="text"
           placeholder="Search courses..."
-          class="px-4 py-2 border-0 outline-none text-sm"
+          class="px-4 py-2 border-0 outline-none text-sm cursor-pointer"
         />
       </div>
     </div>
-    <!--  -->
+
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div class="mx-auto max-w-2xl lg:mx-0">
         <p class="mt-2 text-lg/8 text-gray-600">
@@ -309,7 +313,7 @@ const posts = [
       <Alert v-if="error" type="error" :message="error" />
 
       <EmptyState
-        v-if="!loading && courseStore.courses.length === 0"
+        v-if="!loading && instructorStore?.courses?.length === 0"
         icon="fa-regular fa-calendar-check"
         heading="Ready to begin?"
         description="Create your first course now"
@@ -323,53 +327,91 @@ const posts = [
 
       <div
         v-else
-        class="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3"
+        class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-200 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3"
       >
         <article
-          v-for="post in posts"
-          :key="post.id"
+          v-for="course in instructorStore?.courses"
+          :key="course?._id"
           class="flex max-w-xl flex-col items-start justify-between"
         >
-          <div class="flex items-center gap-x-4 text-xs">
-            <time :datetime="post.datetime" class="text-gray-500">{{
-              post.date
-            }}</time>
-            <a
-              :href="post.category.href"
-              class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
-              >{{ post.category.title }}</a
-            >
-
-            <i class="fa-regular fa-pen-to-square ml-14"></i>
+          <div class="w-full h-48 mb-4 overflow-hidden rounded-lg">
+            <img
+              :src="course?.coverImage"
+              :alt="course?.title"
+              class="w-full h-full object-cover"
+            />
           </div>
-          <div class="group relative">
+
+          <div class="flex items-center gap-x-4 text-xs">
+            <time :datetime="course?.createdAt" class="text-gray-500">
+              {{ new Date(course?.createdAt).toISOString().split("T")[0] }}
+            </time>
+
+            <div class="flex items-center">
+              <i class="far fa-clock mr-1"></i>
+              <span>6.5 hours</span>
+            </div>
+            <a
+              class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
+            >
+              Tech
+            </a>
+            <span class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset">Tech</span>
+          </div>
+
+          <div class="group relative border-b border-gray-300 p-2">
             <h3
               class="mt-3 text-lg/6 font-semibold text-gray-900 group-hover:text-gray-600"
             >
-              <a :href="post.href">
-                <span class="absolute inset-0" />
-                {{ post.title }}
+              <a :href="course?.href">
+                <span class="absolute inset-0"></span>
+                {{ course?.title }}
               </a>
             </h3>
             <p class="mt-5 line-clamp-3 text-sm/6 text-gray-600">
-              {{ post.description }}
+              {{ course?.description }}
             </p>
           </div>
-          <div class="relative mt-8 flex items-center gap-x-4">
-            <img
-              :src="post.author.imageUrl"
-              alt=""
-              class="size-10 rounded-full bg-gray-50"
-            />
-            <div class="text-sm/6">
-              <p class="font-semibold text-gray-900">
-                <a :href="post.author.href">
-                  <span class="absolute inset-0" />
-                  {{ post.author.name }}
-                </a>
-              </p>
-              <p class="text-gray-600">{{ post.author.role }}</p>
+
+          <div class="flex justify-between w-full">
+            <div class="flex items-center mt-1 text-xs">
+              <span class="text-orange-400 font-bold mr-2">4.5</span>
+              <div class="flex text-orange-400">
+                <i v-for="i in 5" :key="i" class="fas fa-star text-xs"></i>
+              </div>
+              <span class="text-gray-500 text-xs ml-2">(2,451)</span>
             </div>
+
+            <div class="flex items-center text-xs text-gray-500">
+              <div class="flex items-center">
+                <i class="fas fa-user-friends mr-1"></i>
+                <span>1,245 students</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-2 flex items-center gap-x-6 justify-start w-full">
+            <button
+              @click="showFeedbackModal(course)"
+              class="hover:opacity-75 transition-opacity"
+            >
+              <i
+                class="fa-regular fa-comments text-gray-500 hover:text-gray-400 text-sm cursor-pointer"
+              ></i>
+            </button>
+            <button class="hover:opacity-75 transition-opacity">
+              <i
+                class="fa-regular fa-pen-to-square text-blue-500 hover:text-blue-400 cursor-pointer text-sm"
+              ></i>
+            </button>
+            <button
+              @click="openDelete"
+              class="hover:opacity-75 transition-opacity"
+            >
+              <i
+                class="fa-solid fa-trash-can text-red-500 hover:text-red-400 text-sm cursor-pointer"
+              ></i>
+            </button>
           </div>
         </article>
       </div>
