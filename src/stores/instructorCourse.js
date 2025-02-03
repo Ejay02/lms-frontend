@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import api from "../utils/axios";
 import { useNotificationStore } from "./notification";
 
@@ -9,18 +9,18 @@ export const useInstructorCoursesStore = defineStore(
     const courses = ref([]);
     const loading = ref(false);
     const error = ref(null);
-
+    const search = ref("");
     const notificationStore = useNotificationStore();
 
     const fetchInstructorCourses = async ({
       page = 1,
       limit = 10,
-      search = "",
+      searchQuery = "",
     } = {}) => {
       loading.value = true;
       try {
         const response = await api.get("/courses/instructor-courses", {
-          params: { page, limit, search },
+          params: { page, limit, searchQuery },
         });
 
         courses.value = response?.data?.data;
@@ -33,20 +33,23 @@ export const useInstructorCoursesStore = defineStore(
       }
     };
 
-    // Update a specific course
-    const updateCourse = async (courseId, updatedData) => {
+    watch(search, async () => {
+      fetchInstructorCourses();
+    });
+
+    // In your instructorCourse store
+    const fetchSingleCourse = async (courseId) => {
       try {
-        const { data } = await api.put(`/courses/${courseId}`, updatedData);
-        courses.value = courses.value.map((course) =>
-          course._id === courseId ? { ...course, ...data } : course
-        );
+        const { data } = await api.get(`/courses/${courseId}`);
+        return data;
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message || "Error fetching course";
         notificationStore.addNotification({
-          type: "success",
-          message: `Successfully updated the course!`,
+          type: "error",
+          message: errorMessage,
         });
-      } catch (err) {
-        error.value = err.response?.data?.message || "Failed to update course";
-        throw new Error(error.value);
+        throw new Error(errorMessage);
       }
     };
 
@@ -108,13 +111,32 @@ export const useInstructorCoursesStore = defineStore(
       }
     };
 
+    // Update a specific course
+    const updateCourse = async (courseId, updatedData) => {
+      try {
+        const { data } = await api.put(`/courses/${courseId}`, updatedData);
+        courses.value = courses.value.map((course) =>
+          course._id === courseId ? { ...course, ...data } : course
+        );
+        notificationStore.addNotification({
+          type: "success",
+          message: `Successfully updated the course!`,
+        });
+      } catch (err) {
+        error.value = err.response?.data?.message || "Failed to update course";
+        throw new Error(error.value);
+      }
+    };
+
     return {
       error,
+      search,
       courses,
       loading,
       updateCourse,
       deleteCourse,
       createCourse,
+      fetchSingleCourse,
       fetchInstructorCourses,
     };
   }

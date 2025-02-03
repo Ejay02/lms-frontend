@@ -34,7 +34,7 @@
 <script setup>
 import api from "../../utils/axios";
 import StarRating from "../starRating.vue";
-import { ref, defineEmits } from "vue";
+import { ref } from "vue";
 import { useNotificationStore } from "../../stores/notification";
 
 const props = defineProps({

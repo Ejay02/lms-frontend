@@ -23,7 +23,13 @@ const router = createRouter({
       component: () => import("../views/createCourse.vue"),
       meta: { requiresAuth: true },
     },
-  
+    {
+      path: "/edit-course/:id",
+      name: "edit-course",
+      component: () => import("../views/editCourseView.vue"),
+      meta: { requiresAuth: true },
+    },
+
     {
       path: "/profile-setting",
       name: "course-details",

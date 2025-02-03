@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, defineEmits } from "vue";
+import { ref } from "vue";
 import { useInstructorCoursesStore } from "../../stores/instructorCourse";
 
 const props = defineProps({

@@ -1,7 +1,6 @@
 <template>
   <div class="bg-gray-200 rounded-md py-12 sm:py-16">
     <div class="flex justify-between items-center mb-4 px-6 lg:px-8">
-      
       <h2
         class="text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl"
       >
@@ -113,7 +112,10 @@
                 class="fa-regular fa-comments text-gray-500 hover:text-gray-400 text-sm cursor-pointer"
               ></i>
             </button>
-            <button class="hover:opacity-75 transition-opacity">
+            <button
+              @click="openEdit(course)"
+              class="hover:opacity-75 transition-opacity"
+            >
               <i
                 class="fa-regular fa-pen-to-square text-blue-500 hover:text-blue-400 cursor-pointer text-sm"
               ></i>
@@ -159,13 +161,29 @@ const error = ref("");
 const router = useRouter();
 const showFeedback = ref(false);
 const selectedCourse = ref(null);
-const instructorStore = useInstructorCoursesStore();
 const openDelete = ref(false);
 const courseToDelete = ref(null);
+const instructorStore = useInstructorCoursesStore();
 
 const goToCourses = () => {
   router.push("/");
 };
+
+const openEdit = (course) => {
+  console.log('Course ID:', course._id);  // Verify course ID
+  try {
+    // Explicitly log full navigation attempt
+    console.log('Navigating to:', `/edit-course/${course._id}`);
+    router.push(`/edit-course/${course._id}`);
+  } catch (error) {
+    console.error('Navigation error:', error);
+  }
+};
+// const openEdit = (course) => {
+//   console.log('Course ID:', course._id);
+//   console.log(course)
+//   router.push(`/edit-course/${course._id}`);
+// };
 
 const showFeedbackModal = (course) => {
   selectedCourse.value = course;
