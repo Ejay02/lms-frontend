@@ -45,10 +45,7 @@ export const useInstructorCoursesStore = defineStore(
       } catch (error) {
         const errorMessage =
           error.response?.data?.message || "Error fetching course";
-        notificationStore.addNotification({
-          type: "error",
-          message: errorMessage,
-        });
+
         throw new Error(errorMessage);
       }
     };

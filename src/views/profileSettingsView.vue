@@ -152,9 +152,7 @@ const handleSubmit = async () => {
   try {
     isLoading.value = true;
 
-    console.log("Data being submitted:", formData.value);
-
-    // Send data directly since image is already in base64
+    // Send data directly since image is already in base64 ??? too much pls aborting
     const dataToSubmit = {
       name: formData.value.name,
       email: formData.value.email,

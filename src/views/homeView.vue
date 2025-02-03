@@ -48,9 +48,9 @@ const isNew = (createdAt) => {
   return hoursDifference < 24; // Check if it's within the last 24 hours
 };
 
-//     coverImage: "https://picsum.photos/seed/ts1/800/600",
+//    https://picsum.photos/seed/ts1/800/600
 
-//     coverImage: "https://picsum.photos/seed/fs1/800/600",
+//    https://picsum.photos/seed/fs1/800/600
 </script>
 
 <template>
@@ -81,7 +81,7 @@ const isNew = (createdAt) => {
     <Alert v-if="error" type="error" :message="error" />
 
     <EmptyState
-      v-if="!loading && !error && courseStore.courses.length === 0"
+      v-if="!loading && !error && courseStore?.courses.length === 0"
       icon="fa-regular fa-calendar-check"
       heading="Nothing here yet!"
       description="Try again later"
@@ -196,8 +196,8 @@ const isNew = (createdAt) => {
           <!-- Show "View Course" link only if enrolled -->
           <div class=""></div>
           <RouterLink
+            to="/my-courses"
             v-if="courseStore.isEnrolled(course._id)"
-            :to="{ name: 'course-content', params: { id: course._id } }"
             class="block w-full text-center text-purple-600 hover:text-purple-700 mt-2 text-sm"
           >
             View Course

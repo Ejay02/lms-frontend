@@ -160,7 +160,7 @@ const loading = ref(true);
 const error = ref("");
 const router = useRouter();
 const showFeedback = ref(false);
-const selectedCourse = ref(null);
+const selectedCourse = ref({});
 const openDelete = ref(false);
 const courseToDelete = ref(null);
 const instructorStore = useInstructorCoursesStore();
@@ -181,7 +181,7 @@ const showFeedbackModal = (course) => {
 // Close the feedback modal
 const closeFeedbackModal = () => {
   showFeedback.value = false;
-  selectedCourse.value = null;
+  selectedCourse.value = {};
 };
 
 const showDeleteModal = (course) => {

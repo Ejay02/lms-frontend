@@ -42,7 +42,6 @@ export const useCourseStore = defineStore("course", () => {
         //   },
         // }
       );
-      console.log("response:", response);
 
       // if (response?.data?.data) {
       // Update courses with the response data
@@ -177,14 +176,14 @@ export const useCourseStore = defineStore("course", () => {
       const response = await api.get(`/progress/${courseId}`);
       progress.value[courseId] = response.data.progress;
     } catch (error) {
-      progress.value[courseId] = 0; // Default to 0 if no progress found
+      progress.value[courseId] = 0;
     }
   };
 
   const updateProgress = async (courseId, contentId) => {
     try {
       await api.post(`/progress/${courseId}`, { contentId });
-      await fetchProgress(courseId); // Refresh progress after updating
+      await fetchProgress(courseId);
     } catch (error) {
       throw error;
     }

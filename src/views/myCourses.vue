@@ -111,6 +111,10 @@ const handleUnenroll = async (course) => {
     console.error("Error enrolling:", error);
   }
 };
+
+const goToCourse = (course) => {
+  router.push(`/my-course/${course._id}`);
+};
 </script>
 
 <template>
@@ -163,6 +167,7 @@ const handleUnenroll = async (course) => {
             class="absolute inset-0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center"
           >
             <div
+              @click="goToCourse(course)"
               class="w-16 h-16 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             >
               <i class="fas fa-play text-gray-800 text-lg"></i>

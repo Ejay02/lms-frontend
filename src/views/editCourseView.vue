@@ -169,7 +169,7 @@
 
             <button
               type="button"
-              class="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-500 hover:text-blue-500"
+              class="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-indigo-500 hover:text-indigo-500"
               @click="addContentItem"
             >
               <i class="fas fa-plus mr-2"></i>
@@ -189,7 +189,7 @@
           </button>
           <button
             type="submit"
-            class="cursor-pointer px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            class="cursor-pointer px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-500 disabled:opacity-50"
             :disabled="loading"
           >
             <i v-if="loading" class="fas fa-spinner fa-spin mr-2"></i>
@@ -208,8 +208,8 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useInstructorCoursesStore } from "../stores/instructorCourse";
 import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
+import { useInstructorCoursesStore } from "../stores/instructorCourse";
 
 const router = useRouter();
 const route = useRoute();

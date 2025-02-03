@@ -18,6 +18,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/my-course/:id",
+      name: "my-course",
+      component: () => import("../views/myCourse.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/create-course",
       name: "create-course",
       component: () => import("../views/createCourse.vue"),
@@ -65,16 +71,16 @@ router.beforeEach((to, from, next) => {
   }
 
   // If the user is authenticated...
-  if (isAuthenticated && (to.path === "/login" || to.path === "/register")) {
-    // Check if there's a role flag present in the query (e.g., ?role=instructor)
-    if (to.query && to.query.role) {
-      // If the role flag is present, allow navigation to /login
-      return next();
-    } else {
-      // Otherwise, redirect to home.
-      return next("/");
-    }
-  }
+  // if (isAuthenticated && (to.path === "/login" || to.path === "/register")) {
+  //   // Check if there's a role flag present in the query (e.g., ?role=instructor)
+  //   if (to.query && to.query.role) {
+  //     // If the role flag is present, allow navigation to /login
+  //     return next();
+  //   } else {
+  //     // Otherwise, redirect to home.
+  //     return next("/");
+  //   }
+  // }
 
   // Otherwise, continue as normal.
   next();
