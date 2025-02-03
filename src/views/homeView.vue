@@ -6,12 +6,10 @@ import { useCourseStore } from "../stores/course";
 import EmptyState from "../components/ui/emptyState.vue";
 import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
 
-import { useInstructorCoursesStore } from "../stores/instructorCourse";
-
 import TeacherView from "./teacherView.vue";
 
 const courseStore = useCourseStore();
-// const instructorStore = useInstructorCoursesStore();
+
 const auth = useAuthStore();
 
 const loading = ref(true);
@@ -28,7 +26,6 @@ const handleEnroll = async (course) => {
 onMounted(async () => {
   try {
     await courseStore?.fetchCourses();
-    // await instructorStore?.fetchInstructorCourses();
   } catch (err) {
     error.value = "Failed to load courses";
   } finally {
@@ -66,7 +63,7 @@ const isNew = (createdAt) => {
       <h1 class="text-2xl font-bold">A broad selection of courses</h1>
       <div class="flex items-center border rounded-md">
         <i class="fa-solid fa-magnifying-glass px-4 text-gray-500"></i>
-   
+
         <input
           v-model="courseStore.searchQuery"
           type="text"

@@ -38,7 +38,6 @@ export const useInstructorCoursesStore = defineStore(
       fetchInstructorCourses();
     });
 
-    // In your instructorCourse store
     const fetchSingleCourse = async (courseId) => {
       try {
         const { data } = await api.get(`/courses/${courseId}`);
@@ -54,10 +53,8 @@ export const useInstructorCoursesStore = defineStore(
       }
     };
 
-    // Delete a specific course
     const deleteCourse = async (courseId) => {
       try {
-        // Optionally get course title for notification
         const courseToDelete = courses.value.find(
           (course) => course._id === courseId
         );
@@ -112,7 +109,6 @@ export const useInstructorCoursesStore = defineStore(
       }
     };
 
-    // Update a specific course
     const updateCourse = async (courseId, updatedData) => {
       try {
         const { data } = await api.put(`/courses/${courseId}`, updatedData);

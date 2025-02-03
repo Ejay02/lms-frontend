@@ -42,6 +42,7 @@ export const useCourseStore = defineStore("course", () => {
         //   },
         // }
       );
+      console.log("response:", response);
 
       // if (response?.data?.data) {
       // Update courses with the response data

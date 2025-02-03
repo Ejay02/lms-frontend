@@ -183,7 +183,7 @@
           <button
             type="button"
             class="cursor-pointer px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-            @click="resetForm"
+            @click="resetForm && router.push('/')"
           >
             Cancel
           </button>
@@ -191,7 +191,6 @@
             type="submit"
             class="cursor-pointer px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
             :disabled="loading"
-            @click="handleSubmit"
           >
             <i v-if="loading" class="fas fa-spinner fa-spin mr-2"></i>
             {{ loading ? "Creating Course..." : "Create Course" }}
@@ -309,7 +308,7 @@ const handleSubmit = async () => {
   try {
     await instructorCoursesStore.createCourse(courseData);
     await instructorCoursesStore.fetchInstructorCourses();
-    router.push("/courses");
+    router.push("/");
   } catch (error) {
     console.error("Course creation error:", error);
   }

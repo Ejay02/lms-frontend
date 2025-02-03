@@ -104,7 +104,7 @@ export const useAuthStore = defineStore("auth", () => {
 
       await fetchUserDetails();
 
-      router.push("/courses");
+      router.push("/");
     } catch (error) {
       errorMessage.value = "Google registration failed";
     }

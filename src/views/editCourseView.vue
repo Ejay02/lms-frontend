@@ -5,7 +5,7 @@
       <div class="mb-8">
         <div class="flex justify-between">
           <h1 class="text-3xl font-bold text-gray-800">Edit Course</h1>
-          <RouterLink to="/courses">
+          <RouterLink to="/">
             <i class="fa-solid fa-xmark cursor-pointer text-gray-400"></i>
           </RouterLink>
         </div>
