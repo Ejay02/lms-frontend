@@ -66,6 +66,7 @@ const isNew = (createdAt) => {
       <h1 class="text-2xl font-bold">A broad selection of courses</h1>
       <div class="flex items-center border rounded-md">
         <i class="fa-solid fa-magnifying-glass px-4 text-gray-500"></i>
+   
         <input
           v-model="courseStore.searchQuery"
           type="text"

@@ -67,23 +67,44 @@ export const useInstructorCoursesStore = defineStore(
             courseToDelete?.title || "the course"
           }!`,
         });
+        await fetchInstructorCourses();
       } catch (err) {
         error.value = err.response?.data?.message || "Failed to delete course";
         throw new Error(error.value);
       }
     };
 
-    const createCourse = async () => {
+    const createCourse = async (courseData) => {
       try {
-        const { data } = await api.post(`/courses`);
+        const { data } = await api.post("/courses", {
+          title: courseData.title,
+          description: courseData.description,
+          coverImage: courseData.coverImage,
+          content: courseData.content.map((item) => ({
+            title: item.title.trim(),
+            description: item.description?.trim(),
+            type: item.type,
+            data: item.data.trim(),
+          })),
+        });
 
         notificationStore.addNotification({
           type: "success",
           message: `Course created successfully`,
         });
+
+        return data;
       } catch (error) {
-        error.value = err.response?.data?.message || "Error creating course";
-        throw new Error(error.value);
+        const errorMessage =
+          error.response?.data?.message || "Error creating course";
+
+        notificationStore.addNotification({
+          type: "error",
+          message: errorMessage,
+        });
+
+        error.value = errorMessage;
+        throw new Error(errorMessage);
       }
     };
 
@@ -101,7 +122,7 @@ export const useInstructorCoursesStore = defineStore(
 
 // TODO:
 /**
- * 1: create a new Course UI
+
  * 2: create Edit Course UI
  * 3. fix the login from instructor page
  * 4. create a view course page mark complete btn which up updates the course progress bar

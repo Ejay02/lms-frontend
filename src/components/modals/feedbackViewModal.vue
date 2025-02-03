@@ -1,13 +1,13 @@
 <template>
   <div
     v-if="props.show"
-    class="fixed inset-0 bg-gray-100 bg-opacity-30 backdrop-blur-lg flex items-center justify-center cursor-pointer"
+    class="fixed inset-0 bg-white/50 bg-opacity-30 backdrop-blur-lg flex items-center justify-center cursor-pointer"
   >
     <div class="bg-gray-200 rounded-lg p-6 max-w-2xl w-full mx-4">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold">Course Feedback</h2>
         <button @click="handleClose" class="text-gray-500 hover:text-gray-700">
-          <i class="fas fa-times"></i>
+          <i class="fas fa-times cursor-pointer"></i>
         </button>
       </div>
 

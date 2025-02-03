@@ -1,21 +1,20 @@
 <template>
   <div class="bg-gray-200 rounded-md py-12 sm:py-16">
     <div class="flex justify-between items-center mb-4 px-6 lg:px-8">
+      
       <h2
         class="text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl"
       >
         Courses by you...
       </h2>
 
-      <div class="flex items-center border rounded-md">
-        <i class="fa-solid fa-magnifying-glass px-4 text-gray-500"></i>
-        <input
-          v-model="instructorStore.searchQuery"
-          type="text"
-          placeholder="Search courses..."
-          class="px-4 py-2 border-0 outline-none text-sm cursor-pointer"
-        />
-      </div>
+      <routerLink
+        to="/create-course"
+        class="flex cursor-pointer bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-500 transition"
+      >
+        <i class="fa-solid fa-plus text-center mt-1 pr-2"></i>
+        <span> Create </span>
+      </routerLink>
     </div>
 
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
@@ -120,7 +119,7 @@
               ></i>
             </button>
             <button
-              @click="openDelete"
+              @click="showDeleteModal(course)"
               class="hover:opacity-75 transition-opacity"
             >
               <i
@@ -137,6 +136,12 @@
     :course="selectedCourse"
     @close="closeFeedbackModal"
   />
+
+  <DeleteModal
+    :open="openDelete"
+    :course="courseToDelete"
+    @close="openDelete = false"
+  />
 </template>
 
 <script setup>
@@ -144,6 +149,7 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import Alert from "../components/ui/Alert.vue";
 import EmptyState from "../components/ui/emptyState.vue";
+import DeleteModal from "../components/modals/deleteModal.vue";
 import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
 import { useInstructorCoursesStore } from "../stores/instructorCourse";
 import FeedbackViewModal from "../components/modals/feedbackViewModal.vue";
@@ -154,6 +160,8 @@ const router = useRouter();
 const showFeedback = ref(false);
 const selectedCourse = ref(null);
 const instructorStore = useInstructorCoursesStore();
+const openDelete = ref(false);
+const courseToDelete = ref(null);
 
 const goToCourses = () => {
   router.push("/");
@@ -168,6 +176,11 @@ const showFeedbackModal = (course) => {
 const closeFeedbackModal = () => {
   showFeedback.value = false;
   selectedCourse.value = null;
+};
+
+const showDeleteModal = (course) => {
+  courseToDelete.value = course;
+  openDelete.value = true;
 };
 
 onMounted(async () => {
