@@ -73,13 +73,39 @@ export const useInstructorCoursesStore = defineStore(
       }
     };
 
+    const createCourse = async () => {
+      try {
+        const { data } = await api.post(`/courses`);
+
+        notificationStore.addNotification({
+          type: "success",
+          message: `Course created successfully`,
+        });
+      } catch (error) {
+        error.value = err.response?.data?.message || "Error creating course";
+        throw new Error(error.value);
+      }
+    };
+
     return {
+      error,
       courses,
       loading,
-      error,
       updateCourse,
       deleteCourse,
+      createCourse,
       fetchInstructorCourses,
     };
   }
 );
+
+// TODO:
+/**
+ * 1: create a new Course UI
+ * 2: create Edit Course UI
+ * 3. fix the login from instructor page
+ * 4. create a view course page mark complete btn which up updates the course progress bar
+ * 5. create a course completed certificate which should be sent when progress is 100%
+ * 6. refactor code, clean up and move to individual components[if youve got the time?]
+ * 7. update README.md
+ */

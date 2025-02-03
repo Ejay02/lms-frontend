@@ -34,7 +34,7 @@
 <script setup>
 import api from "../../utils/axios";
 import StarRating from "../starRating.vue";
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineEmits } from "vue";
 import { useNotificationStore } from "../../stores/notification";
 
 const props = defineProps({
@@ -74,12 +74,14 @@ const submitFeedback = async () => {
       message: `Feedback submitted successfully!`,
     });
 
-    console.log("Feedback submitted:", response.data);
     comment.value = "";
     rating.value = 0;
     closeModal();
   } catch (error) {
-    console.error("Error submitting feedback:", error);
+    notificationStore.addNotification({
+      type: "error",
+      message: `Error submitting feedback`,
+    });
   } finally {
     isSubmitting.value = false;
   }

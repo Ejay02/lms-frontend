@@ -1,9 +1,9 @@
 <template>
   <div
     v-if="props.show"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+    class="fixed inset-0 bg-gray-100 bg-opacity-30 backdrop-blur-lg flex items-center justify-center cursor-pointer"
   >
-    <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+    <div class="bg-gray-200 rounded-lg p-6 max-w-2xl w-full mx-4">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold">Course Feedback</h2>
         <button @click="handleClose" class="text-gray-500 hover:text-gray-700">
@@ -11,7 +11,7 @@
         </button>
       </div>
 
-      <Alert v-if="error" type="error" :message="error" />
+      <!-- <Alert v-if="error" type="error" :message="error" /> -->
 
       <EmptyState
         v-if="!loading && feedback.length === 0"
@@ -24,20 +24,50 @@
         <LoadingSpinner size="lg" />
       </div>
 
-      <div v-else class="max-h-96 overflow-y-auto">
+      <div v-else class="max-h-96 overflow-y-auto space-y-6 p-4">
         <div
           v-for="item in feedback"
           :key="item._id"
-          class="mb-4 p-4 border rounded-lg"
+          class="bg-white rounded-lg border border-gray-200 p-6"
         >
-          <div class="flex items-center mb-2">
-            <i class="fas fa-user-circle text-gray-400 mr-2"></i>
-            <span class="font-semibold">{{ item.user.name }}</span>
+          <div class="flex items-start gap-4">
+            <!-- Avatar -->
+            <img
+              class="h-10 w-10 rounded-full object-cover flex-shrink-0"
+              :src="
+                item.user?.profileImage ||
+                'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+              "
+              :alt="`${item.user?.name}'s profile`"
+            />
+
+            <!-- Content Container -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-start justify-between gap-4">
+                <div class="space-y-1">
+                  <h3 class="text-sm font-semibold text-gray-900 capitalize">
+                    {{ item.user?.name }}
+                  </h3>
+                  <p class="text-xs text-gray-500">{{ item.user?.email }}</p>
+                </div>
+
+                <!-- Rating and Date -->
+                <div class="flex items-center gap-3">
+                  <StarRating :rating="item.rating" />
+                  <span
+                    class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+                  >
+                    {{ new Date(item.createdAt).toLocaleDateString("en-CA") }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Comment -->
+              <p class="mt-4 text-sm text-gray-600 font-mono">
+                {{ item.comment }}
+              </p>
+            </div>
           </div>
-          <p class="text-gray-600">{{ item.comment }}</p>
-          <span class="text-sm text-gray-400">
-            {{ new Date(item.createdAt).toLocaleDateString("en-CA") }}
-          </span>
         </div>
       </div>
     </div>
@@ -45,11 +75,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, watch } from "vue";
 import api from "../../utils/axios";
-import LoadingSpinner from "../ui/LoadingSpinner.vue";
+import StarRating from "../starRating.vue";
 import EmptyState from "../ui/emptyState.vue";
-import Alert from "../ui/Alert.vue";
+import LoadingSpinner from "../ui/LoadingSpinner.vue";
+import { useNotificationStore } from "../../stores/notification";
+
+const notificationStore = useNotificationStore();
 
 const props = defineProps({
   show: {
@@ -76,9 +109,14 @@ const getFeedback = async () => {
   loading.value = true;
   try {
     const response = await api.get(`/feedback/${props.course._id}`);
-    feedback.value = response.data?.data || [];
+
+    feedback.value = response.data;
   } catch (error) {
-    console.error("Error fetching feedback:", error);
+    notificationStore.addNotification({
+      type: "error",
+      message: `Error getting feedback`,
+    });
+    throw new Error(error);
   } finally {
     loading.value = false;
   }
