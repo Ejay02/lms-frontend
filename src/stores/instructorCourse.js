@@ -10,6 +10,7 @@ export const useInstructorCoursesStore = defineStore(
     const loading = ref(false);
     const error = ref(null);
     const search = ref("");
+
     const notificationStore = useNotificationStore();
 
     const fetchInstructorCourses = async ({
@@ -95,7 +96,7 @@ export const useInstructorCoursesStore = defineStore(
           type: "success",
           message: `Course created successfully`,
         });
-
+        await fetchInstructorCourses();
         return data;
       } catch (error) {
         const errorMessage =
@@ -122,6 +123,8 @@ export const useInstructorCoursesStore = defineStore(
           type: "success",
           message: `Successfully updated the course!`,
         });
+
+        await fetchInstructorCourses();
       } catch (err) {
         error.value = err.response?.data?.message || "Failed to update course";
         throw new Error(error.value);

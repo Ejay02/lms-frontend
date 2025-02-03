@@ -170,20 +170,8 @@ const goToCourses = () => {
 };
 
 const openEdit = (course) => {
-  console.log('Course ID:', course._id);  // Verify course ID
-  try {
-    // Explicitly log full navigation attempt
-    console.log('Navigating to:', `/edit-course/${course._id}`);
-    router.push(`/edit-course/${course._id}`);
-  } catch (error) {
-    console.error('Navigation error:', error);
-  }
+  router.push(`/edit-course/${course._id}`);
 };
-// const openEdit = (course) => {
-//   console.log('Course ID:', course._id);
-//   console.log(course)
-//   router.push(`/edit-course/${course._id}`);
-// };
 
 const showFeedbackModal = (course) => {
   selectedCourse.value = course;

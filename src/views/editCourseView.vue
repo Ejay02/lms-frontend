@@ -183,7 +183,7 @@
           <button
             type="button"
             class="cursor-pointer px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-            @click="router.push('/courses')"
+            @click="router.push('/')"
           >
             Cancel
           </button>
@@ -226,11 +226,12 @@ const errors = reactive({
   content: "",
 });
 
-// Fetch course details when component mounts
 onMounted(async () => {
   try {
     const courseId = route.params.id;
-    const course = await instructorCoursesStore.fetchSingleCourse(courseId);
+
+    const response = await instructorCoursesStore.fetchSingleCourse(courseId);
+    const course = response.course;
 
     courseData.value = {
       title: course.title,
@@ -245,7 +246,6 @@ onMounted(async () => {
     };
   } catch (err) {
     error.value = "Failed to load course details";
-    router.push("/courses");
   }
 });
 
@@ -326,7 +326,7 @@ const handleSubmit = async () => {
     loading.value = true;
     const courseId = route.params.id;
     await instructorCoursesStore.updateCourse(courseId, courseData.value);
-    router.push("/courses");
+    router.push("/");
   } catch (error) {
     console.error("Course update error:", error);
   } finally {
