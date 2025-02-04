@@ -167,22 +167,30 @@ const goToCourse = (course) => {
             class="absolute inset-0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center"
           >
             <div
-              @click="goToCourse(course)"
+              @click="() => goToCourse(course)"
               class="w-16 h-16 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             >
               <i class="fas fa-play text-gray-800 text-lg"></i>
             </div>
           </div>
+
           <!-- Progress Bar -->
           <div
             class="absolute bottom-0 left-0 right-0 bg-gray-900/70 text-white text-xs p-1"
           >
             <div class="flex items-center justify-between px-2">
-              <span>{{ getCourseProgress(course._id) }}% complete</span>
+              <span
+                >{{
+                  Math.floor(getCourseProgress(course._id).percentage) || 0
+                }}
+                % complete</span
+              >
               <div class="w-24 bg-gray-200 rounded-full h-1.5">
                 <div
                   class="bg-indigo-600 h-1.5 rounded-full transition-all duration-300"
-                  :style="{ width: `${getCourseProgress(course._id)}%` }"
+                  :style="{
+                    width: `${getCourseProgress(course._id).percentage || 0}%`,
+                  }"
                 ></div>
               </div>
             </div>

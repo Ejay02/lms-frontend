@@ -10,7 +10,7 @@ export const useCourseStore = defineStore("course", () => {
 
   const enrolledCourseIds = ref(new Set());
   const loading = ref(false);
-  const token = ref(localStorage.getItem("token"));
+  // const token = ref(localStorage.getItem("token"));
   const notificationStore = useNotificationStore();
 
   const searchQuery = ref("");
@@ -18,15 +18,15 @@ export const useCourseStore = defineStore("course", () => {
   const page = ref(1);
   const limit = ref(10);
 
-  const setAuthHeader = (token) => {
-    if (token) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    } else {
-      delete api.defaults.headers.common["Authorization"];
-    }
-  };
+  // const setAuthHeader = (token) => {
+  //   if (token) {
+  //     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  //   } else {
+  //     delete api.defaults.headers.common["Authorization"];
+  //   }
+  // };
 
-  setAuthHeader(token.value);
+  // setAuthHeader(token.value);
 
   const fetchCourses = async () => {
     try {
@@ -170,18 +170,63 @@ export const useCourseStore = defineStore("course", () => {
 
   const fetchProgress = async (courseId) => {
     try {
+      if (!courseId) {
+        throw new Error("Course ID is required");
+      }
+
       const response = await api.get(`/progress/${courseId}`);
-      progress.value[courseId] = response.data.progress;
+
+      // Store both progress percentage and completed content
+      progress.value[courseId] = {
+        percentage: response.data.progress || 0,
+        completedContent: response.data.completedContent || [],
+        lastAccessed: response.data.lastAccessed,
+        course: response.data.course,
+      };
+
+      return progress.value[courseId];
     } catch (error) {
-      progress.value[courseId] = 0;
+      console.error("Error fetching progress:", error);
+      // Initialize with default values if there's an error
+      progress.value[courseId] = {
+        percentage: 0,
+        completedContent: [],
+        lastAccessed: null,
+        course: null,
+      };
+      throw error;
     }
   };
 
   const updateProgress = async (courseId, contentId) => {
     try {
-      await api.post(`/progress/${courseId}`, { contentId });
-      await fetchProgress(courseId);
+      if (!courseId || !contentId) {
+        throw new Error("Course ID and Content ID are required");
+      }
+
+      const response = await api.post(`/progress/${courseId}`, { contentId });
+
+      // Update the local progress state with the new data
+      progress.value[courseId] = {
+        percentage: response.data.progress,
+        completedContent: response.data.completedContent,
+        lastAccessed: response.data.lastAccessed,
+        course: response.data.course,
+      };
+
+      // Show success notification
+      notificationStore.addNotification({
+        type: "success",
+        message: "Section Completed!",
+      });
+
+      return response.data;
     } catch (error) {
+      console.error("Error updating progress:", error);
+      notificationStore.addNotification({
+        type: "error",
+        message: "Failed to update progress. Please try again.",
+      });
       throw error;
     }
   };

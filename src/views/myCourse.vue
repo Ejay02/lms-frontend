@@ -2,22 +2,35 @@
 import { useRoute } from "vue-router";
 import { ref, computed, onMounted } from "vue";
 import { useInstructorCoursesStore } from "../stores/instructorCourse";
+import { useCourseStore } from "../stores/course";
 import Alert from "../components/ui/Alert.vue";
 import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
 
 const route = useRoute();
 const course = ref(null);
 const activeLesson = ref(0);
-
 const error = ref(null);
+const loading = ref(true);
+
 const courseStore = useInstructorCoursesStore();
+const progressStore = useCourseStore();
+
+// Track completed lessons
+const completedLessons = ref([]);
 
 onMounted(async () => {
   try {
+    loading.value = true;
     const fetchedCourse = await courseStore.fetchSingleCourse(route.params.id);
     course.value = fetchedCourse.course;
+    
+    // Fetch initial progress
+    const progress = await progressStore.fetchProgress(route.params.id);
+    completedLessons.value = progress.completedContent.map(item => item.contentId);
   } catch (err) {
     error.value = err;
+  } finally {
+    loading.value = false;
   }
 });
 
@@ -26,25 +39,33 @@ const currentLesson = computed(() => {
   return course.value?.content?.[activeLesson.value] || null;
 });
 
+// Computed for progress percentage
+const progressPercentage = computed(() => {
+  if (!course.value?.content?.length) return 0;
+  return Math.round((completedLessons.value.length / course.value.content.length) * 100);
+});
+
 // Method to toggle lesson completion
 const toggleLessonCompletion = async (lessonId) => {
   try {
-    // If lesson is already completed, remove it; otherwise, add it
+    if (!course.value?._id) return;
+
+    // Update UI immediately for better UX
     if (completedLessons.value.includes(lessonId)) {
-      completedLessons.value = completedLessons.value.filter(
-        (id) => id !== lessonId
-      );
+      completedLessons.value = completedLessons.value.filter(id => id !== lessonId);
     } else {
       completedLessons.value.push(lessonId);
     }
 
-    // Call store method to update completed lessons on the backend
-    await courseStore.updateCompletedLessons(
-      course.value._id,
-      completedLessons.value
-    );
+    // Update progress in backend
+    await progressStore.updateProgress(course.value._id, lessonId);
+    
+    // Fetch updated progress to ensure sync
+    const progress = await progressStore.fetchProgress(course.value._id);
+    completedLessons.value = progress.completedContent.map(item => item.contentId);
   } catch (err) {
     console.error("Failed to update lesson completion:", err);
+    error.value = "Failed to update progress. Please try again.";
   }
 };
 </script>
@@ -60,22 +81,53 @@ const toggleLessonCompletion = async (lessonId) => {
     <LoadingSpinner size="lg" />
   </div>
 
-  <div v-else-if="course" class="min-h-screen bg-gray-50 py-8">
+  <div v-else-if="course" class="min-h-screen bg-gray-200 py-8 rounded-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Course Header -->
       <div class="mb-8">
-        <div class="flex items-center space-x-4 mb-6">
-          <img
-            v-if="course.coverImage"
-            :src="course.coverImage"
-            alt="course cover"
-            class="w-12 h-12 object-cover rounded-lg shadow-sm"
-          />
-          <div>
-            <h1 class="text-2xl font-bold text-gray-900 mb-2">
-              {{ course.title }}
-            </h1>
-            <p class="text-gray-600 text-sm">{{ course.description }}</p>
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center space-x-4">
+            <img
+              v-if="course.coverImage"
+              :src="course.coverImage"
+              alt="course cover"
+              class="w-12 h-12 object-cover rounded-lg shadow-sm"
+            />
+            <div>
+              <h1 class="text-2xl font-bold text-gray-900 mb-2">
+                {{ course.title }}
+              </h1>
+              <p class="text-gray-600 text-sm">{{ course.description }}</p>
+            </div>
+          </div>
+          <!-- Progress indicator -->
+          <div class="flex items-center">
+            <div class="bg-white rounded-full p-2 shadow-sm">
+              <div class="relative w-16 h-16">
+                <svg class="w-full h-full" viewBox="0 0 36 36">
+                  <path
+                    d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                    fill="none"
+                    stroke="#E5E7EB"
+                    stroke-width="3"
+                  />
+                  <path
+                    d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"
+                    fill="none"
+                    stroke="#4F46E5"
+                    stroke-width="3"
+                    :stroke-dasharray="`${progressPercentage}, 100`"
+                  />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-sm font-semibold text-gray-900">{{ progressPercentage }}%</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -86,7 +138,7 @@ const toggleLessonCompletion = async (lessonId) => {
         <div class="lg:col-span-2">
           <div
             v-if="currentLesson"
-            class="bg-gray-200 rounded-xl shadow-sm overflow-hidden"
+            class="bg-white rounded-xl shadow-sm overflow-hidden"
           >
             <div class="p-6">
               <!-- Video Content -->
@@ -138,8 +190,13 @@ const toggleLessonCompletion = async (lessonId) => {
         <!-- Sidebar -->
         <div class="lg:col-span-1">
           <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div class="p-4 bg-gray-200 border-b border-gray-100">
-              <h3 class="text-lg font-medium text-gray-900">Course Content</h3>
+            <div class="p-4 bg-gray-50 border-b border-gray-100">
+              <div class="flex justify-between items-center">
+                <h3 class="text-lg font-medium text-gray-900">Course Content</h3>
+                <span class="text-sm text-gray-500">
+                  {{ completedLessons.length }}/{{ course.content.length }} completed
+                </span>
+              </div>
             </div>
             <div class="divide-y divide-gray-100">
               <div
@@ -150,18 +207,17 @@ const toggleLessonCompletion = async (lessonId) => {
                 :class="{ 'bg-indigo-50': activeLesson === index }"
               >
                 <!-- Lesson Completion Checkbox -->
-                <div>
-                  <!-- :checked="completedLessons.includes(lesson._id)" -->
+                <div class="mr-3">
                   <input
                     type="checkbox"
                     :id="lesson._id"
+                    :checked="completedLessons.includes(lesson._id)"
                     @change="toggleLessonCompletion(lesson._id)"
-                    class="form-checkbox h-3 w-3 text-center mt-4 mr-3 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300 cursor-pointer"
+                    class="form-checkbox h-4 w-4 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300 cursor-pointer"
                   />
                 </div>
 
-                <!--  -->
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-3 flex-1">
                   <div
                     class="flex-shrink-0 w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center"
                   >
@@ -225,7 +281,7 @@ const toggleLessonCompletion = async (lessonId) => {
           </div>
           <div class="flex items-center">
             <i class="fas fa-user-friends mr-1"></i>
-            <span>{{ course?.students.length }} Student(s)</span>
+            <span>{{ course?.students?.length || 0 }} Student(s)</span>
           </div>
           <div class="flex items-center">
             <i class="far fa-closed-captioning mr-1 text-gray-400"></i>
