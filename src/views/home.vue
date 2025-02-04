@@ -20,27 +20,49 @@
 
     <!-- Featured Courses -->
     <section class="py-16 px-6">
-      <h2 class="text-3xl font-semibold text-center">Featured Courses</h2>
-      <div class="grid md:grid-cols-3 gap-6 mt-8">
-        <div
-          v-for="course in courses"
-          :key="course.id"
-          class="bg-white p-4 rounded-lg shadow-md"
-        >
-          <div class="h-40 bg-gray-200 rounded-md overflow-hidden">
-            <img :src="course.imageUrl" class="w-full h-full object-cover" />
+      <h2 class="text-3xl font-semibold text-center mb-8">Featured Courses</h2>
+      <Swiper
+        :modules="[SwiperNavigation, SwiperPagination, SwiperAutoplay]"
+        :slides-per-view="1"
+        :space-between="20"
+        :breakpoints="{
+          '640': {
+            slidesPerView: 2,
+            spaceBetween: 20,
+          },
+          '1024': {
+            slidesPerView: 3,
+            spaceBetween: 30,
+          },
+        }"
+        :navigation="true"
+        :pagination="{ clickable: true }"
+        :autoplay="{
+          delay: 3000,
+          disableOnInteraction: false,
+        }"
+        class="w-full max-w-6xl mx-auto"
+      >
+        <SwiperSlide v-for="course in courses" :key="course.id">
+          <div class="bg-gray-200 p-4 rounded-lg shadow-md h-full">
+            <div class="h-40 bg-gray-50 rounded-md overflow-hidden">
+              <img
+                :src="course.imageUrl"
+                class="w-full h-full object-cover"
+                :alt="course.title"
+              />
+            </div>
+            <h3 class="mt-4 font-semibold text-lg">{{ course.title }}</h3>
+            <p class="text-sm text-gray-600 mt-1">{{ course.instructor }}</p>
+            <button
+              @click="goTo"
+              class="mt-4 bg-indigo-600 hover:bg-indigo-400 text-white px-4 py-2 rounded-md w-full"
+            >
+              Enroll Now
+            </button>
           </div>
-
-          <h3 class="mt-4 font-semibold text-lg">{{ course.title }}</h3>
-          <p class="text-sm text-gray-600 mt-1">{{ course.instructor }}</p>
-          <button
-            @click="goTo"
-            class="mt-4 bg-indigo-600 hover:bg-indigo-400 text-white px-4 py-2 rounded-md"
-          >
-            Enroll Now
-          </button>
-        </div>
-      </div>
+        </SwiperSlide>
+      </Swiper>
     </section>
 
     <!-- Call to Action -->
@@ -121,8 +143,20 @@
 import { ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 
+import { Swiper, SwiperSlide } from "swiper/vue";
+
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
 const router = useRouter();
 const currentYear = ref(new Date().getFullYear());
+
+const SwiperNavigation = Navigation;
+const SwiperPagination = Pagination;
+const SwiperAutoplay = Autoplay;
 
 const goTo = () => {
   router.push("/login");
@@ -131,7 +165,7 @@ const goTo = () => {
 const courses = ref([
   {
     id: 1,
-    title: "Duck 101 : 0 - Hero!",
+    title: "Duck 101: 0 - Hero!",
     instructor: "Bugs Bunny",
     imageUrl:
       "https://imgs.search.brave.com/UGg9Wwbl8pR61vmZVtglKDr0zWSNkSajzJz66SdmVQQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYnVn/cy1idW5ueS0yNTYw/LXgtMTM2OC1waWN0/dXJlLXJ4NDdlMGp2/NWVwZGRsazQuanBn",
@@ -157,7 +191,45 @@ const courses = ref([
     imageUrl:
       "https://media.istockphoto.com/id/1162709935/photo/web-fundamentals-text-written-on-programming-code-abstract-technology-background-of-software.jpg?s=612x612&w=is&k=20&c=XN2G6MMogG02OLE4GiQ3NnIS62ENSwcFZtH15_cKU-0=",
   },
+  {
+    id: 5,
+    title: "AI & Machine Learning Essentials",
+    instructor: "David Lee",
+    imageUrl:
+      "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2765&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    id: 6,
+    title: "Cybersecurity for Beginners",
+    instructor: "Sophia Martinez",
+    imageUrl:
+      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
 ]);
 </script>
 
-<style scoped></style>
+<style scoped>
+.swiper {
+  width: 100%;
+  height: 100%;
+  padding: 20px 0 40px;
+}
+
+.swiper-slide {
+  height: auto;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #4f46e5;
+  cursor: pointer;
+}
+
+.swiper-pagination-bullet {
+  background: #4f46e5;
+}
+
+.swiper-pagination-bullet-active {
+  background: #4f46e5;
+}
+</style>
