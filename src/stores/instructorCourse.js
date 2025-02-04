@@ -9,7 +9,7 @@ export const useInstructorCoursesStore = defineStore(
     const courses = ref([]);
     const loading = ref(false);
     const error = ref(null);
-    const search = ref("");
+    const searchQuery = ref("");
 
     const notificationStore = useNotificationStore();
 
@@ -34,7 +34,7 @@ export const useInstructorCoursesStore = defineStore(
       }
     };
 
-    watch(search, async () => {
+    watch(searchQuery, async () => {
       fetchInstructorCourses();
     });
 
@@ -126,9 +126,9 @@ export const useInstructorCoursesStore = defineStore(
 
     return {
       error,
-      search,
       courses,
       loading,
+      searchQuery,
       updateCourse,
       deleteCourse,
       createCourse,

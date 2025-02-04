@@ -32,16 +32,13 @@ export const useCourseStore = defineStore("course", () => {
     try {
       loading.value = true;
 
-      const response = await api.get(
-        "/courses"
-        //   {
-        //   params: {
-        //     page: page.value,
-        //     limit: limit.value,
-        //     search: searchQuery.value,
-        //   },
-        // }
-      );
+      const response = await api.get("/courses", {
+        params: {
+          page: page.value,
+          limit: limit.value,
+          search: searchQuery.value,
+        },
+      });
 
       // if (response?.data?.data) {
       // Update courses with the response data

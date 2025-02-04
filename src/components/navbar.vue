@@ -2,16 +2,12 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useRouter } from "vue-router";
-import { useInstructorCoursesStore } from "../stores/instructorCourse";
 
 const auth = useAuthStore();
 
 const router = useRouter();
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
-const instructorStore = useInstructorCoursesStore();
-
-// const user = auth.fetchUserDetails();
 
 const handleLogout = () => {
   auth.logout();
@@ -59,18 +55,6 @@ onUnmounted(() => {
           >
             LMS Platform
           </routerLink>
-          <div
-            class="ml-6 flex items-center border rounded-md"
-            v-if="auth?.user?.role === 'instructor'"
-          >
-            <i class="fa-solid fa-magnifying-glass px-4 text-gray-500"></i>
-            <input
-              v-model="instructorStore.search"
-              type="text"
-              placeholder="Search courses..."
-              class="px-4 py-2 border-0 outline-none text-sm cursor-pointer"
-            />
-          </div>
         </div>
         <div class="flex items-center">
           <template v-if="auth.token">

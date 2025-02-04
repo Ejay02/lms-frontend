@@ -1,3 +1,68 @@
+<script setup>
+import { onMounted, ref, computed } from "vue";
+import { useRouter } from "vue-router";
+import Alert from "../components/ui/Alert.vue";
+import EmptyState from "../components/ui/emptyState.vue";
+import DeleteModal from "../components/modals/deleteModal.vue";
+import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
+import { useInstructorCoursesStore } from "../stores/instructorCourse";
+import FeedbackViewModal from "../components/modals/feedbackViewModal.vue";
+
+const loading = ref(true);
+const error = ref("");
+const router = useRouter();
+const showFeedback = ref(false);
+const selectedCourse = ref({});
+const openDelete = ref(false);
+const courseToDelete = ref(null);
+const searchQuery = ref("");
+const instructorStore = useInstructorCoursesStore();
+
+const filteredCourses = computed(() => {
+  if (!searchQuery.value) return instructorStore?.courses;
+
+  const query = searchQuery.value.toLowerCase();
+  return instructorStore?.courses?.filter(
+    (course) =>
+      course.title.toLowerCase().includes(query) ||
+      course.description.toLowerCase().includes(query)
+  );
+});
+
+const goToCourses = () => {
+  router.push("/");
+};
+
+const openEdit = (course) => {
+  router.push(`/edit-course/${course._id}`);
+};
+
+const showFeedbackModal = (course) => {
+  selectedCourse.value = course;
+  showFeedback.value = true;
+};
+
+const closeFeedbackModal = () => {
+  showFeedback.value = false;
+  selectedCourse.value = {};
+};
+
+const showDeleteModal = (course) => {
+  courseToDelete.value = course;
+  openDelete.value = true;
+};
+
+onMounted(async () => {
+  try {
+    await instructorStore?.fetchInstructorCourses();
+  } catch (err) {
+    error.value = "Failed to load courses";
+  } finally {
+    loading.value = false;
+  }
+});
+</script>
+
 <template>
   <div class="bg-gray-200 rounded-md py-12 sm:py-16">
     <div class="flex justify-between items-center mb-4 px-6 lg:px-8">
@@ -7,13 +72,25 @@
         Courses by you...
       </h2>
 
-      <routerLink
-        to="/create-course"
-        class="flex cursor-pointer bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-500 transition"
-      >
-        <i class="fa-solid fa-plus text-center mt-1 pr-2"></i>
-        <span> Create </span>
-      </routerLink>
+      <div class="flex items-center space-x-4">
+        <div class="flex items-center border rounded-md bg-white">
+          <i class="fa-solid fa-magnifying-glass px-4 text-gray-500"></i>
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search courses..."
+            class="px-4 py-2 border-0 outline-none text-sm"
+          />
+        </div>
+
+        <routerLink
+          to="/create-course"
+          class="flex cursor-pointer bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-500 transition"
+        >
+          <i class="fa-solid fa-plus text-center mt-1 pr-2"></i>
+          <span>Create</span>
+        </routerLink>
+      </div>
     </div>
 
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
@@ -27,7 +104,7 @@
       <Alert v-if="error" type="error" :message="error" />
 
       <EmptyState
-        v-if="!loading && !error && instructorStore?.courses?.length === 0"
+        v-if="!loading && !error && filteredCourses?.length === 0"
         icon="fa-regular fa-calendar-check"
         heading="Ready to begin?"
         description="Create your first course now"
@@ -44,7 +121,7 @@
         class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:mt-6 sm:pt-6 lg:mx-0 lg:max-w-none lg:grid-cols-3"
       >
         <section
-          v-for="course in instructorStore?.courses"
+          v-for="course in filteredCourses"
           :key="course?._id"
           class="flex max-w-xl flex-col items-start justify-between border rounded border-gray-300 p-2"
         >
@@ -68,8 +145,9 @@
 
             <span
               class="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-purple-700/10 ring-inset"
-              >Tech</span
             >
+              Tech
+            </span>
           </div>
 
           <div class="group relative p-2">
@@ -133,6 +211,7 @@
       </div>
     </div>
   </div>
+
   <FeedbackViewModal
     :show="showFeedback"
     :course="selectedCourse"
@@ -145,59 +224,5 @@
     @close="openDelete = false"
   />
 </template>
-
-<script setup>
-import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-import Alert from "../components/ui/Alert.vue";
-import EmptyState from "../components/ui/emptyState.vue";
-import DeleteModal from "../components/modals/deleteModal.vue";
-import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
-import { useInstructorCoursesStore } from "../stores/instructorCourse";
-import FeedbackViewModal from "../components/modals/feedbackViewModal.vue";
-
-const loading = ref(true);
-const error = ref("");
-const router = useRouter();
-const showFeedback = ref(false);
-const selectedCourse = ref({});
-const openDelete = ref(false);
-const courseToDelete = ref(null);
-const instructorStore = useInstructorCoursesStore();
-
-const goToCourses = () => {
-  router.push("/");
-};
-
-const openEdit = (course) => {
-  router.push(`/edit-course/${course._id}`);
-};
-
-const showFeedbackModal = (course) => {
-  selectedCourse.value = course;
-  showFeedback.value = true;
-};
-
-// Close the feedback modal
-const closeFeedbackModal = () => {
-  showFeedback.value = false;
-  selectedCourse.value = {};
-};
-
-const showDeleteModal = (course) => {
-  courseToDelete.value = course;
-  openDelete.value = true;
-};
-
-onMounted(async () => {
-  try {
-    await instructorStore?.fetchInstructorCourses();
-  } catch (err) {
-    error.value = "Failed to load courses";
-  } finally {
-    loading.value = false;
-  }
-});
-</script>
 
 <style scoped></style>
