@@ -12,6 +12,7 @@
         label="Name"
         :error="errors.name"
         placeholder="Jane Gates"
+        @input="validateField('name')"
       />
 
       <FormInput
@@ -20,7 +21,9 @@
         type="email"
         :error="errors.email"
         placeholder="example@example.com"
+        @input="validateField('email')"
       />
+
       <div class="relative">
         <FormInput
           v-model="form.password"
@@ -28,6 +31,7 @@
           :type="showPassword ? 'text' : 'password'"
           :error="errors.password"
           placeholder="Enter your password"
+          @input="validateField('password')"
         />
         <button
           type="button"
@@ -39,10 +43,19 @@
         </button>
       </div>
 
+      <FormInput
+        v-model="form.confirmPassword"
+        label="Confirm Password"
+        :type="showPassword ? 'text' : 'password'"
+        :error="errors.confirmPassword"
+        placeholder="Confirm your password"
+        @input="validateField('confirmPassword')"
+      />
+
       <button
         type="submit"
-        class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-400 disabled:opacity-50 mt-4 cursor-pointer"
-        :disabled="loading"
+        class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+        :disabled="loading || !isFormValid"
       >
         <LoadingSpinner v-if="loading" size="sm" class="mx-auto" />
         <span v-else>Register</span>
@@ -74,7 +87,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useRoute, useRouter } from "vue-router";
 import FormInput from "../components/ui/formInput.vue";
@@ -103,31 +116,61 @@ const loading = ref(false);
 const errorMessage = ref("");
 const showPassword = ref(false);
 
+const validateField = (field) => {
+  delete errors.value[field];
+
+  switch (field) {
+    case "name":
+      if (!form.value.name.trim()) {
+        errors.value.name = "Name is required";
+      }
+      break;
+
+    case "email":
+      if (!form.value.email) {
+        errors.value.email = "Email is required";
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.value.email)) {
+        errors.value.email = "Invalid email format";
+      }
+      break;
+
+    case "password":
+      if (!form.value.password) {
+        errors.value.password = "Password is required";
+      } else if (form.value.password.length < 6) {
+        errors.value.password = "Password must be at least 6 characters";
+      }
+      break;
+
+    case "confirmPassword":
+      if (form.value.password !== form.value.confirmPassword) {
+        errors.value.confirmPassword = "Passwords do not match";
+      }
+      break;
+  }
+};
+
 const validate = () => {
   errors.value = {};
 
-  if (!form.value.name) {
-    errors.value.name = "Name is required";
-  }
-
-  if (!form.value.email) {
-    errors.value.email = "Email is required";
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.value.email)) {
-    errors.value.email = "Invalid email format";
-  }
-
-  if (!form.value.password) {
-    errors.value.password = "Password is required";
-  } else if (form.value.password.length < 6) {
-    errors.value.password = "Password must be at least 6 characters";
-  }
-
-  if (form.value.password !== form.value.confirmPassword) {
-    errors.value.confirmPassword = "Passwords do not match";
-  }
+  ["name", "email", "password", "confirmPassword"].forEach((field) => {
+    validateField(field);
+  });
 
   return Object.keys(errors.value).length === 0;
 };
+
+const isFormValid = computed(() => {
+  const nameValid = form.value.name.trim();
+  const emailValid = form.value.email;
+  const passwordLengthValid = form.value.password.length >= 6;
+  const passwordsMatch = form.value.password === form.value.confirmPassword;
+  const noErrors = Object.keys(errors.value).length === 0;
+
+  return (
+    nameValid && emailValid && passwordLengthValid && passwordsMatch && noErrors
+  );
+});
 
 const handleSubmit = async () => {
   if (!validate()) return;

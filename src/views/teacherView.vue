@@ -29,8 +29,8 @@ const filteredCourses = computed(() => {
   );
 });
 
-const goToCourses = () => {
-  router.push("/");
+const createCourse = () => {
+  router.push("/create-course");
 };
 
 const openEdit = (course) => {
@@ -109,7 +109,7 @@ onMounted(async () => {
         heading="Ready to begin?"
         description="Create your first course now"
         buttonText="Create Course"
-        :buttonAction="goToCourses"
+        :buttonAction="createCourse"
       />
 
       <div v-if="loading" class="py-12 flex justify-center">

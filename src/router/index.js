@@ -43,6 +43,11 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/home",
+      name: "landing-page",
+      component: () => import("../views/home.vue"),
+    },
+    {
       path: "/login",
       name: "login",
       component: () => import("../views/loginView.vue"),
@@ -66,7 +71,12 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = !!auth.token;
 
   // If the user is not authenticated, allow navigation to login or register.
-  if (!isAuthenticated && to.path !== "/login" && to.path !== "/register") {
+  if (
+    !isAuthenticated &&
+    to.path !== "/login" &&
+    to.path !== "/register" &&
+    to.path !== "/home"
+  ) {
     return next("/login");
   }
 

@@ -185,7 +185,7 @@ export const useAuthStore = defineStore("auth", () => {
     user.value = null;
     token.value = null;
     localStorage.removeItem("token");
-    localStorage.removeItem("user"); // Clear stored user data
+    localStorage.removeItem("user");
     setAuthHeader(null);
     notificationStore.addNotification({
       type: "success",
