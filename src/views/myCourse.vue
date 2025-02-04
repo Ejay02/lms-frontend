@@ -3,7 +3,7 @@ import { useRoute } from "vue-router";
 import { ref, computed, onMounted } from "vue";
 import { useInstructorCoursesStore } from "../stores/instructorCourse";
 import { useCourseStore } from "../stores/course";
-import Alert from "../components/ui/Alert.vue";
+import Alert from "../components/ui/alert.vue";
 import LoadingSpinner from "../components/ui/loadingSpinner.vue";
 
 const route = useRoute();
