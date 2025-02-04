@@ -22,16 +22,17 @@
     <section class="py-16 px-6">
       <h2 class="text-3xl font-semibold text-center">Featured Courses</h2>
       <div class="grid md:grid-cols-3 gap-6 mt-8">
-        <div v-for="n in 3" :key="n" class="bg-white p-4 rounded-lg shadow-md">
+        <div
+          v-for="course in courses"
+          :key="course.id"
+          class="bg-white p-4 rounded-lg shadow-md"
+        >
           <div class="h-40 bg-gray-200 rounded-md overflow-hidden">
-            <img
-              src="https://imgs.search.brave.com/UGg9Wwbl8pR61vmZVtglKDr0zWSNkSajzJz66SdmVQQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYnVn/cy1idW5ueS0yNTYw/LXgtMTM2OC1waWN0/dXJlLXJ4NDdlMGp2/NWVwZGRsazQuanBn"
-              class="w-full h-full object-cover"
-            />
+            <img :src="course.imageUrl" class="w-full h-full object-cover" />
           </div>
 
-          <h3 class="mt-4 font-semibold text-lg">Duck 101 : 0 - Hero!</h3>
-          <p class="text-sm text-gray-600 mt-1">Bugs Bunny</p>
+          <h3 class="mt-4 font-semibold text-lg">{{ course.title }}</h3>
+          <p class="text-sm text-gray-600 mt-1">{{ course.instructor }}</p>
           <button
             @click="goTo"
             class="mt-4 bg-indigo-600 hover:bg-indigo-400 text-white px-4 py-2 rounded-md"
@@ -50,7 +51,7 @@
       </p>
       <RouterLink
         to="/register?role=instructor"
-        class="mt-8 bg-indigo-600 hover:bg-indigo-400 text-white px-6 py-2 rounded-md"
+        class="mt-8 bg-indigo-600 pb-3 hover:bg-indigo-400 text-white px-6 py-2 rounded-md"
       >
         Start Teaching
       </RouterLink>
@@ -126,6 +127,37 @@ const currentYear = ref(new Date().getFullYear());
 const goTo = () => {
   router.push("/login");
 };
+
+const courses = ref([
+  {
+    id: 1,
+    title: "Duck 101 : 0 - Hero!",
+    instructor: "Bugs Bunny",
+    imageUrl:
+      "https://imgs.search.brave.com/UGg9Wwbl8pR61vmZVtglKDr0zWSNkSajzJz66SdmVQQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLmNvbS9p/bWFnZXMvaGQvYnVn/cy1idW5ueS0yNTYw/LXgtMTM2OC1waWN0/dXJlLXJ4NDdlMGp2/NWVwZGRsazQuanBn",
+  },
+  {
+    id: 2,
+    title: "Data Science Bootcamp",
+    instructor: "Michael Chen",
+    imageUrl:
+      "https://imgs.search.brave.com/SfqxaByeh1msWMzvBDEPyry1x3VkXa-r4kPKYwbcRAQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9kYXRh/c2NpZW5jZWRvam8u/Y29tL3dwLWNvbnRl/bnQvdXBsb2Fkcy9E/YXRhLVNjaWVuY2Ut/Qm9vdGNhbXAtSGVy/bzIuanBn",
+  },
+  {
+    id: 3,
+    title: "Digital Marketing Mastery",
+    instructor: "Emma Rodriguez",
+    imageUrl:
+      "https://plus.unsplash.com/premium_photo-1661425715124-310ec1b49b8a?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8JTIyRGlnaXRhbCUyME1hcmtldGluZyUyME1hc3Rlcnl8ZW58MHx8MHx8fDA%3D",
+  },
+  {
+    id: 4,
+    title: "Web Development Fundamentals",
+    instructor: "Sarah Johnson",
+    imageUrl:
+      "https://media.istockphoto.com/id/1162709935/photo/web-fundamentals-text-written-on-programming-code-abstract-technology-background-of-software.jpg?s=612x612&w=is&k=20&c=XN2G6MMogG02OLE4GiQ3NnIS62ENSwcFZtH15_cKU-0=",
+  },
+]);
 </script>
 
 <style scoped></style>
