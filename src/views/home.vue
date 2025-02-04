@@ -118,8 +118,9 @@
 
 <script setup>
 import { ref } from "vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 
+const router = useRouter();
 const currentYear = ref(new Date().getFullYear());
 
 const goTo = () => {
