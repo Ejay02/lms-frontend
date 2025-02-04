@@ -2,6 +2,8 @@
 import { useRoute } from "vue-router";
 import { ref, computed, onMounted } from "vue";
 import { useInstructorCoursesStore } from "../stores/instructorCourse";
+import Alert from "../components/ui/Alert.vue";
+import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
 
 const route = useRoute();
 const course = ref(null);
@@ -48,14 +50,14 @@ const toggleLessonCompletion = async (lessonId) => {
 </script>
 
 <template>
-  <div
-    v-if="error"
-    class="min-h-screen bg-red-50 flex items-center justify-center"
-  >
-    <div class="text-center">
-      <h2 class="text-2xl font-bold text-red-600 mb-4">Error Loading Course</h2>
-      <p class="text-red-500">{{ error.message }}</p>
-    </div>
+  <RouterLink to="/my-courses" class="text-gray-500 mb-6 inline-block">
+    <i class="fa-solid fa-arrow-left hover:animate-bounce"></i>
+  </RouterLink>
+
+  <Alert v-if="error" type="error" :message="error" />
+
+  <div v-if="loading" class="py-12 flex justify-center">
+    <LoadingSpinner size="lg" />
   </div>
 
   <div v-else-if="course" class="min-h-screen bg-gray-50 py-8">
@@ -76,20 +78,6 @@ const toggleLessonCompletion = async (lessonId) => {
             <p class="text-gray-600 text-sm">{{ course.description }}</p>
           </div>
         </div>
-
-        <!--  -->
-
-        <!-- <div class="flex items-center space-x-4">
-          <div v-if="course.instructor">
-            <p class="text-sm font-medium text-gray-900">
-              {{ course.instructor.name }}
-            </p>
-            <p class="text-sm font-medium text-gray-900">
-              {{ course.instructor.email }}
-            </p>
-            <p class="text-sm text-gray-500">Instructor</p>
-          </div>
-        </div> -->
       </div>
 
       <!-- Course Content -->
@@ -98,7 +86,7 @@ const toggleLessonCompletion = async (lessonId) => {
         <div class="lg:col-span-2">
           <div
             v-if="currentLesson"
-            class="bg-white rounded-xl shadow-sm overflow-hidden"
+            class="bg-gray-200 rounded-xl shadow-sm overflow-hidden"
           >
             <div class="p-6">
               <!-- Video Content -->
@@ -150,7 +138,7 @@ const toggleLessonCompletion = async (lessonId) => {
         <!-- Sidebar -->
         <div class="lg:col-span-1">
           <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div class="p-4 bg-gray-50 border-b border-gray-100">
+            <div class="p-4 bg-gray-200 border-b border-gray-100">
               <h3 class="text-lg font-medium text-gray-900">Course Content</h3>
             </div>
             <div class="divide-y divide-gray-100">
@@ -168,7 +156,7 @@ const toggleLessonCompletion = async (lessonId) => {
                     type="checkbox"
                     :id="lesson._id"
                     @change="toggleLessonCompletion(lesson._id)"
-                    class="form-checkbox h-3 w-3 text-center mt-4 mr-3 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300"
+                    class="form-checkbox h-3 w-3 text-center mt-4 mr-3 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300 cursor-pointer"
                   />
                 </div>
 
@@ -187,7 +175,7 @@ const toggleLessonCompletion = async (lessonId) => {
                     ></i>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <h4 class="text-sm font-medium text-gray-900 truncate">
+                    <h4 class="text-sm font-medium text-gray-900">
                       {{ lesson.title }}
                     </h4>
                     <p class="text-sm text-gray-500 capitalize">
@@ -201,15 +189,52 @@ const toggleLessonCompletion = async (lessonId) => {
         </div>
       </div>
 
-      <!--  -->
+      <div class="mt-6 bg-white rounded-xl shadow-sm p-6">
+        <div class="flex justify-between items-center">
+          <!-- Instructor Information -->
+          <div v-if="course.instructor" class="flex items-center space-x-4">
+            <div>
+              <p class="text-sm font-medium text-gray-900">
+                {{ course.instructor.name }}
+              </p>
+              <p class="text-sm text-gray-500">Instructor</p>
+            </div>
+          </div>
 
-    
-      <!--  -->
-    </div>
-  </div>
-  <div v-else class="min-h-screen bg-gray-50 flex items-center justify-center">
-    <div class="text-center">
-      <p class="text-gray-600">Loading course...</p>
+          <!-- Course Rating -->
+          <div class="flex items-center">
+            <span class="text-orange-400 font-bold text-sm mr-2">
+              {{ course.rating || "4.5" }}
+            </span>
+            <div class="flex text-orange-400">
+              <template v-for="i in 5" :key="i">
+                <i class="fas fa-star text-xs"></i>
+              </template>
+            </div>
+            <span class="text-gray-500 text-xs ml-2">
+              ({{ course.totalRatings || "2,451" }})
+            </span>
+          </div>
+        </div>
+
+        <!-- Course Meta Information -->
+        <div class="flex items-center text-xs text-gray-500 mt-4 space-x-4">
+          <div class="flex items-center">
+            <i class="far fa-clock mr-1"></i>
+            <span>{{ course.duration || "6.5 hours" }}</span>
+          </div>
+          <div class="flex items-center">
+            <i class="fas fa-user-friends mr-1"></i>
+            <span>{{ course?.students.length }} Student(s)</span>
+          </div>
+          <div class="flex items-center">
+            <i class="far fa-closed-captioning mr-1 text-gray-400"></i>
+            <span>{{
+              course.hasSubtitles ? "Subtitles Available" : "No Subtitles"
+            }}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

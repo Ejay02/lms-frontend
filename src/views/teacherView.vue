@@ -98,7 +98,7 @@
             <div class="flex items-center text-xs text-gray-500">
               <div class="flex items-center">
                 <i class="fas fa-user-friends mr-1"></i>
-                <span>1,245 students</span>
+                <span>{{ course.students?.length }} student(s)</span>
               </div>
             </div>
           </div>

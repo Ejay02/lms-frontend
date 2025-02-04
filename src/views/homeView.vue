@@ -136,20 +136,24 @@ const isNew = (createdAt) => {
               >({{ course.totalRatings || "2,451" }})</span
             >
             <!-- <div class="flex items-center"> -->
-            <i class="far fa-closed-captioning ml-6 text-gray-400"></i>
-            <span>{{ course.hasSubtitles ? "CC" : "" }}</span>
-            <!-- </div> -->
+            <div class="flex ml-6 items-center text-xs text-gray-500">
+              <i class="fas fa-user-friends mr-1"></i>
+
+              <span>{{ course.students?.length }}</span>
+            </div>
           </div>
 
           <!-- Course Meta -->
-          <div class="flex items-center text-xs text-gray-500 mb-2 space-x-4">
+          <div
+            class="justify-between flex items-center text-xs text-gray-500 mb-2 space-x-4"
+          >
             <div class="flex items-center">
               <i class="far fa-clock mr-1"></i>
               <span>{{ course.duration || "6.5 hours" }}</span>
             </div>
-            <div class="flex items-center">
-              <i class="fas fa-user-friends mr-1"></i>
-              <span>{{ course.enrollments || "1,245 students" }}</span>
+            <div class="">
+              <i class="far fa-closed-captioning text-gray-400"></i>
+              <span>{{ course.hasSubtitles ? "CC" : "" }}</span>
             </div>
           </div>
 
@@ -165,8 +169,8 @@ const isNew = (createdAt) => {
 
           <!-- Badges -->
           <div class="flex gap-2 mt-2">
-            <!-- v-if="course?.isBestseller" -->
             <div
+              v-if="course.students?.length > 0"
               class="inline-block bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-0.5"
             >
               Bestseller
