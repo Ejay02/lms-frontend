@@ -202,7 +202,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue";
+import { reactive, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useInstructorCoursesStore } from "../stores/instructorCourse";
 

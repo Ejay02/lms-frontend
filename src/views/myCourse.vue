@@ -4,7 +4,7 @@ import { ref, computed, onMounted } from "vue";
 import { useInstructorCoursesStore } from "../stores/instructorCourse";
 import { useCourseStore } from "../stores/course";
 import Alert from "../components/ui/Alert.vue";
-import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
+import LoadingSpinner from "../components/ui/loadingSpinner.vue";
 
 const route = useRoute();
 const course = ref(null);

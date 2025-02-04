@@ -70,7 +70,7 @@
 import { ref } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useRouter } from "vue-router";
-import FormInput from "../components/ui/FormInput.vue";
+import FormInput from "../components/ui/formInput.vue";
 import Alert from "../components/ui/Alert.vue";
 import LoadingSpinner from "../components/ui/loadingSpinner.vue";
 

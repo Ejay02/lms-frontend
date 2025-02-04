@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref, onUnmounted } from "vue";
 import { useCourseStore } from "../stores/course";
-import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
+import LoadingSpinner from "../components/ui/loadingSpinner.vue";
 import Alert from "../components/ui/Alert.vue";
 import EmptyState from "../components/ui/emptyState.vue";
 import { useRouter } from "vue-router";

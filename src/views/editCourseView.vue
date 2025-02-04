@@ -208,7 +208,7 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
+import LoadingSpinner from "../components/ui/loadingSpinner.vue";
 import { useInstructorCoursesStore } from "../stores/instructorCourse";
 
 const router = useRouter();

@@ -79,7 +79,7 @@ import { ref, watch } from "vue";
 import api from "../../utils/axios";
 import StarRating from "../starRating.vue";
 import EmptyState from "../ui/emptyState.vue";
-import LoadingSpinner from "../ui/LoadingSpinner.vue";
+import LoadingSpinner from "../ui/loadingSpinner.vue";
 import { useNotificationStore } from "../../stores/notification";
 
 const notificationStore = useNotificationStore();

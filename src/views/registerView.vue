@@ -77,9 +77,9 @@
 import { onMounted, ref } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useRoute, useRouter } from "vue-router";
-import FormInput from "../components/ui/FormInput.vue";
-import Alert from "../components/ui/Alert.vue";
-import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
+import FormInput from "../components/ui/formInput.vue";
+import Alert from "../components/ui/alert.vue";
+import LoadingSpinner from "../components/ui/loadingSpinner.vue";
 
 const auth = useAuthStore();
 const router = useRouter();

@@ -1,10 +1,10 @@
 <script setup>
 import { onMounted, ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import Alert from "../components/ui/Alert.vue";
+import Alert from "../components/ui/alert.vue";
 import EmptyState from "../components/ui/emptyState.vue";
 import DeleteModal from "../components/modals/deleteModal.vue";
-import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
+import LoadingSpinner from "../components/ui/loadingSpinner.vue";
 import { useInstructorCoursesStore } from "../stores/instructorCourse";
 import FeedbackViewModal from "../components/modals/feedbackViewModal.vue";
 
