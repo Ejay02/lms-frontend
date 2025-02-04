@@ -23,7 +23,7 @@
 
 <script setup>
 import { useNotificationStore } from "../../stores/notification";
-import NotificationItem from "./NotificationItem.vue";
+import NotificationItem from "./notificationItem.vue";
 
 const notificationStore = useNotificationStore();
 </script>

@@ -30,8 +30,6 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-
 const props = defineProps({
   notification: {
     type: Object,
