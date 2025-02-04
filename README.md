@@ -14,6 +14,8 @@ This is the frontend of the school management system, built using Vue.js 3 and T
 
 [DEMO](https://ej-lms.netlify.app)
 
+** Note: Since its hosted on the free tier, you might need to wait a bit for it to spin up since they tend to go to sleep.
+
 ## Technologies Used
 
 - **Vue.js 3** - Frontend framework
