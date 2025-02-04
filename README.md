@@ -10,6 +10,9 @@ This is the frontend of the school management system, built using Vue.js 3 and T
 - Role-based dashboard for Admin, Instructor, Student
 - Interactive course management for LMS
 
+## Live Demo
+[DEMO](https://ej-lms.netlify.app)
+
 ## Technologies Used
 
 - **Vue.js 3** - Frontend framework
@@ -77,6 +80,6 @@ The built files will be located in the `dist/` directory.
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## 👥 Authors
+## 👥 Author
 
-- Ej- Initial work - [Ej](https://github.com/Ejay02/lms-backend.git)
+- Initial work - [Ej](https://github.com/Ejay02/lms-backend.git)
