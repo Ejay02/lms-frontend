@@ -133,7 +133,8 @@ const toggleLessonCompletion = async (lessonId) => {
                 </svg>
                 <div class="absolute inset-0 flex items-center justify-center">
                   <span class="text-sm font-semibold text-gray-900"
-                    >{{ progressPercentage }}%</span
+                    >{{ progressPercentage }}%
+                    </span
                   >
                 </div>
               </div>

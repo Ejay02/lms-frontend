@@ -11,6 +11,7 @@ This is the frontend of the school management system, built using Vue.js 3 and T
 - Interactive course management for LMS
 
 ## Live Demo
+
 [DEMO](https://ej-lms.netlify.app)
 
 ## Technologies Used

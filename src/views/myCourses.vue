@@ -47,7 +47,7 @@ const dropdownItems = [
     label: "Report",
     action: () => {
       notificationStore.addNotification({
-        type: "warning",
+        type: "error",
         message: `Demo: Reported!`,
       });
     },
@@ -180,7 +180,8 @@ const goToCourse = (course) => {
           >
             <div class="flex items-center justify-between px-2">
               <span
-                >{{
+                >
+                {{
                   Math.floor(getCourseProgress(course._id).percentage) || 0
                 }}
                 % complete</span
