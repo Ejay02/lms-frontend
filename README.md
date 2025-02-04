@@ -44,8 +44,9 @@ Create a `.env` file in the project root and configure the following:
 
 ```
 VITE_API_URL=<backend-api-url>
-VITE_STRIPE_PUBLIC_KEY=<your-stripe-public-key>
 VITE_APP_GOOGLE_CLIENT_ID=<your-stripe-client-id>
+VITE_APP_GOOGLE_CLIENT_SECRET=<your-stripe-client-secret>
+VITE_APP_GOOGLE_CLIENT_REDIRECT_URI=<your-stripe-client-redirect-uri>
 ```
 
 ### Running the Project
