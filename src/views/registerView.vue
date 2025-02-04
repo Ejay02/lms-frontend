@@ -38,23 +38,6 @@
           <i class="fa-regular fa-eye-slash" v-else></i>
         </button>
       </div>
-      <div class="relative">
-        <FormInput
-          v-model="form.confirmPassword"
-          label="Confirm Password"
-          :type="showPassword ? 'text' : 'password'"
-          :error="errors.confirmPassword"
-          placeholder="Confirm password"
-        />
-        <button
-          type="button"
-          class="cursor-pointer absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-          @click="showPassword = !showPassword"
-        >
-          <i class="fa-regular fa-eye" v-if="!showPassword"></i>
-          <i class="fa-regular fa-eye-slash" v-else></i>
-        </button>
-      </div>
 
       <button
         type="submit"

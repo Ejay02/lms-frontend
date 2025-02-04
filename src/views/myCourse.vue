@@ -23,10 +23,12 @@ onMounted(async () => {
     loading.value = true;
     const fetchedCourse = await courseStore.fetchSingleCourse(route.params.id);
     course.value = fetchedCourse.course;
-    
+
     // Fetch initial progress
     const progress = await progressStore.fetchProgress(route.params.id);
-    completedLessons.value = progress.completedContent.map(item => item.contentId);
+    completedLessons.value = progress.completedContent.map(
+      (item) => item.contentId
+    );
   } catch (err) {
     error.value = err;
   } finally {
@@ -42,7 +44,9 @@ const currentLesson = computed(() => {
 // Computed for progress percentage
 const progressPercentage = computed(() => {
   if (!course.value?.content?.length) return 0;
-  return Math.round((completedLessons.value.length / course.value.content.length) * 100);
+  return Math.round(
+    (completedLessons.value.length / course.value.content.length) * 100
+  );
 });
 
 // Method to toggle lesson completion
@@ -52,17 +56,21 @@ const toggleLessonCompletion = async (lessonId) => {
 
     // Update UI immediately for better UX
     if (completedLessons.value.includes(lessonId)) {
-      completedLessons.value = completedLessons.value.filter(id => id !== lessonId);
+      completedLessons.value = completedLessons.value.filter(
+        (id) => id !== lessonId
+      );
     } else {
       completedLessons.value.push(lessonId);
     }
 
     // Update progress in backend
     await progressStore.updateProgress(course.value._id, lessonId);
-    
+
     // Fetch updated progress to ensure sync
     const progress = await progressStore.fetchProgress(course.value._id);
-    completedLessons.value = progress.completedContent.map(item => item.contentId);
+    completedLessons.value = progress.completedContent.map(
+      (item) => item.contentId
+    );
   } catch (err) {
     console.error("Failed to update lesson completion:", err);
     error.value = "Failed to update progress. Please try again.";
@@ -124,7 +132,9 @@ const toggleLessonCompletion = async (lessonId) => {
                   />
                 </svg>
                 <div class="absolute inset-0 flex items-center justify-center">
-                  <span class="text-sm font-semibold text-gray-900">{{ progressPercentage }}%</span>
+                  <span class="text-sm font-semibold text-gray-900"
+                    >{{ progressPercentage }}%</span
+                  >
                 </div>
               </div>
             </div>
@@ -156,7 +166,7 @@ const toggleLessonCompletion = async (lessonId) => {
               <!-- Text Content -->
               <div
                 v-else-if="currentLesson.type === 'text'"
-                class="bg-white p-6 rounded-lg shadow"
+                class="bg-gray-200 p-6 rounded-lg shadow"
               >
                 <p class="text-gray-700">
                   {{ currentLesson.data }}
@@ -192,9 +202,14 @@ const toggleLessonCompletion = async (lessonId) => {
           <div class="bg-white rounded-xl shadow-sm overflow-hidden">
             <div class="p-4 bg-gray-50 border-b border-gray-100">
               <div class="flex justify-between items-center">
-                <h3 class="text-lg font-medium text-gray-900">Course Content</h3>
+                <h3 class="text-lg font-medium text-gray-900">
+                  Course Content
+                </h3>
                 <span class="text-sm text-gray-500">
-                  {{ completedLessons.length }}/{{ course.content.length }} completed
+                  {{ completedLessons.length }}/{{
+                    course.content.length
+                  }}
+                  completed
                 </span>
               </div>
             </div>
