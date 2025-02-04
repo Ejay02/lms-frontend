@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useAuthStore } from "../stores/auth";
-import Alert from "../components/ui/Alert.vue";
+import Alert from "../components/ui/alert.vue";
 import { useCourseStore } from "../stores/course";
 import EmptyState from "../components/ui/emptyState.vue";
 import LoadingSpinner from "../components/ui/loadingSpinner.vue";
