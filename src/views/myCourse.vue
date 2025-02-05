@@ -100,7 +100,7 @@ const toggleLessonCompletion = async (lessonId) => {
     <LoadingSpinner size="lg" />
   </div>
 
-  <div v-else-if="course" class="min-h-screen bg-gray-200 py-8 rounded-md">
+  <div v-else="course" class="min-h-screen bg-gray-200 py-8 rounded-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Course Header -->
       <div class="mb-8">

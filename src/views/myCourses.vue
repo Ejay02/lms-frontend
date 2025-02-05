@@ -83,6 +83,7 @@ const closeAllDropdowns = (event) => {
 onMounted(async () => {
   document.addEventListener("click", closeAllDropdowns);
   try {
+    loading.value = true;
     await courseStore.fetchMyCourses();
 
     // Loop through each course and fetch progress
