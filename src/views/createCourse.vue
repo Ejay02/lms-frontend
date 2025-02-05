@@ -1,4 +1,9 @@
 <template>
+  <RouterLink to="/" class="p-2 cursor-pointer">
+    <i
+      class="fa-solid fa-arrow-left-long text-gray-400 mb-4 hover:animate-bounce"
+    ></i>
+  </RouterLink>
   <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-4xl mx-auto bg-gray-200 rounded-lg shadow-md p-6">
       <!-- Header -->
