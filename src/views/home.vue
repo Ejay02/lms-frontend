@@ -52,7 +52,7 @@
                 :alt="course.title"
               />
             </div>
-            <h3 class="mt-4 font-semibold text-lg">{{ course.title }}</h3>
+            <h3 class="mt-4 font-semibold text-lg h-14">{{ course.title }}</h3>
             <p class="text-sm text-gray-600 mt-1">{{ course.instructor }}</p>
             <button
               @click="goTo"

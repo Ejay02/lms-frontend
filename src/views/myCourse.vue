@@ -72,7 +72,6 @@ const toggleLessonCompletion = async (lessonId) => {
       (item) => item.contentId
     );
   } catch (err) {
-    console.error("Failed to update lesson completion:", err);
     error.value = "Failed to update progress. Please try again.";
   }
 };
@@ -134,8 +133,7 @@ const toggleLessonCompletion = async (lessonId) => {
                 <div class="absolute inset-0 flex items-center justify-center">
                   <span class="text-sm font-semibold text-gray-900"
                     >{{ progressPercentage }}%
-                    </span
-                  >
+                  </span>
                 </div>
               </div>
             </div>
@@ -207,9 +205,7 @@ const toggleLessonCompletion = async (lessonId) => {
                   Course Content
                 </h3>
                 <span class="text-sm text-gray-500">
-                  {{ completedLessons.length }}/{{
-                    course.content.length
-                  }}
+                  {{ completedLessons.length }}/{{ course.content.length }}
                   completed
                 </span>
               </div>
