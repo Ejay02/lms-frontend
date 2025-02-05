@@ -121,7 +121,12 @@ const toggleLessonCompletion = async (lessonId) => {
           </div>
           <!-- Progress indicator -->
           <div class="flex items-center" @mouseenter="handleHover">
-            <div class="bg-white rounded-full p-2 shadow-sm">
+            <div
+              :class="[
+                'bg-white rounded-full p-2 shadow-sm',
+                { 'animate-pulse': progressPercentage === 100 },
+              ]"
+            >
               <div class="relative w-16 h-16">
                 <svg class="w-full h-full" viewBox="0 0 36 36">
                   <path
