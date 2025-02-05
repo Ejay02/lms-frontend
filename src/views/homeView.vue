@@ -111,7 +111,7 @@ const isNew = (createdAt) => {
         <!-- Course Content -->
         <div class="p-4">
           <div class="flex justify-between items-start">
-            <h2 class="font-bold text-base mb-1 line-clamp-2 flex-1">
+            <h2 class="font-bold text-base mb-1 h-14 line-clamp-4 flex-1">
               {{ course.title }}
             </h2>
             <!-- Dropdown Menu -->
