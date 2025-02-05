@@ -20,8 +20,6 @@ export const useCourseStore = defineStore("course", () => {
   const page = ref(1);
   const limit = ref(10);
 
-
-
   const fetchCourses = async () => {
     try {
       loading.value = true;
@@ -235,6 +233,41 @@ export const useCourseStore = defineStore("course", () => {
     }
   };
 
+  const uncheckProgress = async (courseId, contentId) => {
+    try {
+      if (!courseId || !contentId) {
+        throw new Error("Course ID and Content ID are required");
+      }
+
+      const response = await api.post(`/progress/${courseId}/uncheck`, {
+        contentId,
+      });
+
+      // Update the local progress state with the new data
+      progress.value[courseId] = {
+        percentage: response.data.progress,
+        completedContent: response.data.completedContent,
+        lastAccessed: response.data.lastAccessed,
+        course: response.data.course,
+      };
+
+      // Optionally, show a success notification
+      notificationStore.addNotification({
+        type: "success",
+        message: "Lesson marked as incomplete.",
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error("Error unchecking progress:", error);
+      notificationStore.addNotification({
+        type: "error",
+        message: "Failed to update progress. Please try again.",
+      });
+      throw error;
+    }
+  };
+
   return {
     enroll,
     courses,
@@ -247,6 +280,7 @@ export const useCourseStore = defineStore("course", () => {
     fetchProgress,
     fetchMyCourses,
     updateProgress,
+    uncheckProgress,
     searchQueryMyCourses,
   };
 });

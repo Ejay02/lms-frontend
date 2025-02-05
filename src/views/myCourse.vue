@@ -49,26 +49,27 @@ const progressPercentage = computed(() => {
   );
 });
 
-// Method to toggle lesson completion
 const toggleLessonCompletion = async (lessonId) => {
   try {
     if (!course.value?._id) return;
 
-    // Update UI immediately for better UX
     if (completedLessons.value.includes(lessonId)) {
+      // Uncheck: remove the lesson from the completed list in the UI immediately
       completedLessons.value = completedLessons.value.filter(
         (id) => id !== lessonId
       );
+      // Update progress in the backend (uncheck endpoint)
+      await progressStore.uncheckProgress(course.value._id, lessonId);
     } else {
+      // Check: add the lesson to the completed list in the UI immediately
       completedLessons.value.push(lessonId);
+      // Update progress in the backend (check endpoint)
+      await progressStore.updateProgress(course.value._id, lessonId);
     }
 
-    // Update progress in backend
-    await progressStore.updateProgress(course.value._id, lessonId);
-
     // Fetch updated progress to ensure sync
-    const progress = await progressStore.fetchProgress(course.value._id);
-    completedLessons.value = progress.completedContent.map(
+    const progressData = await progressStore.fetchProgress(course.value._id);
+    completedLessons.value = progressData.completedContent.map(
       (item) => item.contentId
     );
   } catch (err) {
