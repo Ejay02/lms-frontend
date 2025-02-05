@@ -27,7 +27,7 @@ const deleteCourse = async () => {
 <template>
   <div
     v-if="open"
-    class="fixed inset-0 flex items-center justify-center bg-white/50 bg-opacity-50 z-50 cursor-pointer bg-opacity-20 backdrop-blur-lg"
+    class="fixed inset-0 flex items-center justify-center bg-white/50 bg-opacity-50 z-50 cursor-pointer backdrop-blur-lg"
   >
     <div class="bg-white rounded-lg shadow-lg p-6 w-96">
       <div class="flex items-center justify-between border-b pb-3">

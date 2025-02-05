@@ -153,6 +153,7 @@ const handleImageChange = async (event) => {
   }
 };
 
+// TODO : image needs to be uploaded to a bucket and url sent to the BE. Not a priority for me because they aren't free and a lot of memory.
 const handleSubmit = async () => {
   try {
     isLoading.value = true;
