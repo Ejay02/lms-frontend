@@ -4,6 +4,7 @@ import { ref, computed, onMounted } from "vue";
 import { useInstructorCoursesStore } from "../stores/instructorCourse";
 import { useCourseStore } from "../stores/course";
 import Alert from "../components/ui/alert.vue";
+import confetti from "canvas-confetti";
 import LoadingSpinner from "../components/ui/loadingSpinner.vue";
 
 const route = useRoute();
@@ -48,6 +49,16 @@ const progressPercentage = computed(() => {
     (completedLessons.value.length / course.value.content.length) * 100
   );
 });
+
+const handleHover = () => {
+  if (progressPercentage.value === 100) {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+  }
+};
 
 const toggleLessonCompletion = async (lessonId) => {
   try {
@@ -109,7 +120,7 @@ const toggleLessonCompletion = async (lessonId) => {
             </div>
           </div>
           <!-- Progress indicator -->
-          <div class="flex items-center">
+          <div class="flex items-center" @mouseenter="handleHover">
             <div class="bg-white rounded-full p-2 shadow-sm">
               <div class="relative w-16 h-16">
                 <svg class="w-full h-full" viewBox="0 0 36 36">
