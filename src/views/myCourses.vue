@@ -118,6 +118,11 @@ const goToCourse = (course) => {
 </script>
 
 <template>
+  <RouterLink to="/" class="p-2 cursor-pointer">
+    <i
+      class="fa-solid fa-arrow-left-long text-gray-400 mb-4 hover:animate-bounce"
+    ></i>
+  </RouterLink>
   <div class="p-6 max-w-7xl mx-auto bg-gray-200 rounded-md cursor-pointer">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold text-center">My Learning</h1>
@@ -179,11 +184,8 @@ const goToCourse = (course) => {
             class="absolute bottom-0 left-0 right-0 bg-gray-900/70 text-white text-xs p-1"
           >
             <div class="flex items-center justify-between px-2">
-              <span
-                >
-                {{
-                  Math.floor(getCourseProgress(course._id).percentage) || 0
-                }}
+              <span>
+                {{ Math.floor(getCourseProgress(course._id).percentage) || 0 }}
                 % complete</span
               >
               <div class="w-24 bg-gray-200 rounded-full h-1.5">

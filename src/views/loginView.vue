@@ -1,4 +1,9 @@
 <template>
+  <RouterLink to="/home" class="p-2 cursor-pointer">
+    <i
+      class="fa-solid fa-arrow-left-long text-gray-400 mb-4 hover:animate-bounce"
+    ></i>
+  </RouterLink>
   <div class="max-w-md mx-auto cursor-pointer">
     <h1 class="text-2xl font-bold mb-6 text-center">Login</h1>
 
@@ -34,7 +39,7 @@
       <button
         type="submit"
         class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-400 disabled:opacity-50 mt-4 cursor-pointer"
-        :disabled="loading"
+        :disabled="!isFormValid || loading"
       >
         <LoadingSpinner v-if="loading" size="sm" class="mx-auto" />
         <span v-else>Login</span>
@@ -67,11 +72,11 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useAuthStore } from "../stores/auth";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import FormInput from "../components/ui/formInput.vue";
+import { useAuthStore } from "../stores/auth";
 import Alert from "../components/ui/alert.vue";
+import FormInput from "../components/ui/formInput.vue";
 import LoadingSpinner from "../components/ui/loadingSpinner.vue";
 
 const auth = useAuthStore();
@@ -102,6 +107,14 @@ const validate = () => {
 
   return Object.keys(errors.value).length === 0;
 };
+
+const isFormValid = computed(() => {
+  return (
+    form.value.email &&
+    form.value.password &&
+    Object.keys(errors.value).length === 0
+  );
+});
 
 const handleSubmit = async () => {
   if (!validate()) return;

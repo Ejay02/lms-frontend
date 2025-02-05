@@ -1,4 +1,9 @@
 <template>
+  <RouterLink to="/home" class="p-2 cursor-pointer">
+    <i
+      class="fa-solid fa-arrow-left-long text-gray-400 mb-4 hover:animate-bounce"
+    ></i>
+  </RouterLink>
   <div class="max-w-md mx-auto">
     <h1 class="text-2xl font-bold mb-6 text-center">
       {{ isInstructor ? "Instructor Registration" : "Register" }}

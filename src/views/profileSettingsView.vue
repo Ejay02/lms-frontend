@@ -1,4 +1,9 @@
 <template>
+  <RouterLink to="/" class="p-2 cursor-pointer">
+    <i
+      class="fa-solid fa-arrow-left-long text-gray-400 mb-4 hover:animate-bounce"
+    ></i>
+  </RouterLink>
   <div class="max-w-2xl mx-auto p-4 cursor-pointer">
     <h1 class="text-2xl font-bold mb-6 text-center">Edit Profile</h1>
 
