@@ -9,8 +9,8 @@ const router = useRouter();
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
 
- const token = ref(localStorage.getItem("token"));
- console.log('token:', !!token)
+//  const token = ref(localStorage.getItem("token"));
+ 
 
 const handleLogout = () => {
   auth.logout();
