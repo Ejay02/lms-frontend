@@ -84,6 +84,15 @@ onMounted(async () => {
   document.addEventListener("click", closeAllDropdowns);
   try {
     await courseStore.fetchMyCourses();
+
+    // Loop through each course and fetch progress
+    for (const course of courseStore.courses) {
+      courseStore
+        .fetchProgress(course._id)
+        .catch((err) =>
+          console.error(`Progress not found for course ${course._id}`, err)
+        );
+    }
   } catch (err) {
     error.value = "Failed to load courses";
   } finally {
