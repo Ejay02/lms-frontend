@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 import api from "../utils/axios";
 import { useNotificationStore } from "./notification";
+import { useAuthStore } from "./auth";
 
 export const useCourseStore = defineStore("course", () => {
   const courses = ref([]);
@@ -10,49 +11,51 @@ export const useCourseStore = defineStore("course", () => {
 
   const enrolledCourseIds = ref(new Set());
   const loading = ref(false);
-  // const token = ref(localStorage.getItem("token"));
+
   const notificationStore = useNotificationStore();
+  const authStore = useAuthStore();
 
   const searchQuery = ref("");
   const searchQueryMyCourses = ref("");
   const page = ref(1);
   const limit = ref(10);
 
-  // const setAuthHeader = (token) => {
-  //   if (token) {
-  //     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  //   } else {
-  //     delete api.defaults.headers.common["Authorization"];
-  //   }
-  // };
 
-  // setAuthHeader(token.value);
 
   const fetchCourses = async () => {
     try {
       loading.value = true;
+      const [coursesResponse, enrolledResponse] = await Promise.all([
+        api.get("/courses", {
+          params: {
+            page: page.value,
+            limit: limit.value,
+            search: searchQuery.value,
+          },
+        }),
+        api.get("/courses/my-courses"), // Fetch enrolled courses separately
+      ]);
 
-      const response = await api.get("/courses", {
-        params: {
-          page: page.value,
-          limit: limit.value,
-          search: searchQuery.value,
-        },
-      });
-
-      // if (response?.data?.data) {
-      // Update courses with the response data
-      courses.value = response?.data?.data?.sort(
+      // Get all courses and sort them
+      const sortedCourses = coursesResponse?.data?.data?.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      ); // Sort by the latest added course first
-
-      // Update enrolled course IDs based on isEnrolled flag from backend
-      enrolledCourseIds.value = new Set(
-        response.data.data
-          .filter((course) => course.isEnrolled === true)
-          .map((course) => course._id)
       );
-      // }
+
+      // Get enrolled course IDs from my-courses endpoint
+      const myEnrolledCourses = enrolledResponse?.data?.data || [];
+      const enrolledIds = new Set(
+        myEnrolledCourses.map((course) => course._id)
+      );
+
+      // Update the enrolledCourseIds set
+      enrolledCourseIds.value = enrolledIds;
+
+      // Update courses with correct enrollment status
+      courses.value = sortedCourses.map((course) => ({
+        ...course,
+        isEnrolled: enrolledIds.has(course._id),
+        students: course.students || [],
+      }));
     } catch (error) {
       throw error;
     } finally {
@@ -101,19 +104,21 @@ export const useCourseStore = defineStore("course", () => {
         courseId: course._id,
       });
 
-      // Update the enrollment status in the courses list
+      // Update the local state
       const courseIndex = courses.value.findIndex((c) => c._id === course._id);
       if (courseIndex !== -1) {
         courses.value[courseIndex] = {
           ...courses.value[courseIndex],
           isEnrolled: true,
+          students: [
+            ...(courses.value[courseIndex].students || []),
+            authStore.user,
+          ],
         };
       }
 
       // Add to enrolled courses set
       enrolledCourseIds.value.add(course._id);
-
-      await fetchCourses();
 
       notificationStore.addNotification({
         type: "success",
@@ -136,19 +141,21 @@ export const useCourseStore = defineStore("course", () => {
         courseId: course._id,
       });
 
-      // Update the local course data unconditionally.
+      // Update the local state
       const courseIndex = courses.value.findIndex((c) => c._id === course._id);
       if (courseIndex !== -1) {
         courses.value[courseIndex] = {
           ...courses.value[courseIndex],
           isEnrolled: false,
+          students:
+            courses.value[courseIndex].students?.filter(
+              (student) => student._id !== authStore.user?._id
+            ) || [],
         };
       }
 
       // Remove from enrolled courses set
       enrolledCourseIds.value.delete(course._id);
-
-      await fetchMyCourses();
 
       notificationStore.addNotification({
         type: "success",
@@ -162,10 +169,7 @@ export const useCourseStore = defineStore("course", () => {
   };
 
   const isEnrolled = computed(() => (courseId) => {
-    return (
-      enrolledCourseIds.value.has(courseId) ||
-      courses.value.find((c) => c._id === courseId)?.isEnrolled === true
-    );
+    return enrolledCourseIds.value.has(courseId);
   });
 
   const fetchProgress = async (courseId) => {

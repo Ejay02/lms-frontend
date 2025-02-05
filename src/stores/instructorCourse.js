@@ -24,7 +24,9 @@ export const useInstructorCoursesStore = defineStore(
           params: { page, limit, searchQuery },
         });
 
-        courses.value = response?.data?.data;
+        courses.value = response?.data?.data?.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
       } catch (err) {
         error.value =
           err.response?.data?.message || "Failed to fetch instructor courses";

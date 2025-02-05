@@ -9,6 +9,8 @@ const router = useRouter();
 const isDropdownOpen = ref(false);
 const dropdownRef = ref(null);
 
+ // const token = ref(localStorage.getItem("token"));
+
 const handleLogout = () => {
   auth.logout();
   isDropdownOpen.value = false;
@@ -50,7 +52,7 @@ onUnmounted(() => {
       <div class="flex justify-between h-16 items-center">
         <div class="flex p-2">
           <routerLink
-            to="/home"
+            to="/"
             class="text-gray-700 hover:text-gray-900 font-bold"
           >
             LMS Platform
