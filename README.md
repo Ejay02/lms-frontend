@@ -1,4 +1,4 @@
-# Frontend - Vue.js 3 Application
+# Frontend - Vue.js 3 LMS Application
 
 ## Overview
 
