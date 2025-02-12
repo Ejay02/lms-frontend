@@ -10,7 +10,7 @@ This is the frontend of the school management system, built using Vue.js 3 and T
 - Role-based dashboard for Admin, Instructor, Student
 - Interactive course management for LMS
 
-## Live Demo
+➡️ ## Live Demo
 
 [DEMO](https://ej-lms.netlify.app)
 
