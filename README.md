@@ -62,7 +62,7 @@ VITE_APP_GOOGLE_CLIENT_REDIRECT_URI=<your-stripe-client-redirect-uri>
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173/`.
+The application will be available at `http://localhost:5173`.
 
 ### Building for Production
 
